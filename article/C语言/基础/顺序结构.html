@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言顺序结构</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言顺序结构</h1>
+    <p>顺序结构是程序三大基本结构（顺序、选择、循环）中最基础的结构，代码按书写顺序自上而下依次执行，无跳转、无重复，是构成复杂程序的基本单元，适用于简单的线性数据处理场景。</p>
+
+    <h2>一、核心特点</h2>
+    <ul>
+        <li>执行逻辑：代码从主函数<code>main()</code>开始，按行顺序执行，上一行执行完毕后再执行下一行。</li>
+        <li>无分支跳转：不包含条件判断、循环控制等语句，执行流程唯一且固定。</li>
+        <li>结构简单：仅由变量定义、赋值、输入输出、简单运算等基础语句组成。</li>
+    </ul>
+
+    <h2>二、基本语句构成</h2>
+    <p>顺序结构核心由基础语句组合而成，每条语句以分号<code>;</code>结尾，常见基础语句如下：</p>
+
+    <h3>1. 变量定义与初始化语句</h3>
+    <p>用于声明变量并分配内存，可直接赋值初始化，也可后续赋值。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 变量定义（先声明后赋值）
+    int a;
+    a = 10;
+
+    // 变量定义+初始化（声明时直接赋值）
+    int b = 20;
+    float c = 3.14;
+    char d = 'A';
+
+    printf("a=%d, b=%d, c=%.2f, d=%c\n", a, b, c, d);
+    return 0;
+}</code></pre>
+
+    <h3>2. 赋值语句</h3>
+    <p>将右侧表达式的值赋给左侧变量，覆盖变量原有值，赋值符为<code>=</code>（注意与等于判断<code>==</code>区分）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int x = 5, y = 3;
+    int z;
+
+    z = x + y; // 简单赋值：z = 8
+    printf("z=x+y=%d\n", z);
+
+    z = x * 2 + y; // 含运算的赋值：z = 13
+    printf("z=x*2+y=%d\n", z);
+
+    x = x + 5; // 自增赋值：x = 10
+    printf("x自增后=%d\n", x);
+    return 0;
+}</code></pre>
+
+    <h3>3. 输入输出语句</h3>
+    <p>通过标准库函数实现数据读写，核心用<code>scanf()</code>输入、<code>printf()</code>输出，是程序与用户交互的基础。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int age;
+    float score;
+    char name[20];
+
+    // 输入语句：读取用户输入的数据
+    printf("请输入姓名：");
+    scanf("%s", name);
+    printf("请输入年龄：");
+    scanf("%d", &amp;age);
+    printf("请输入成绩：");
+    scanf("%f", &amp;score);
+
+    // 输出语句：展示数据
+    printf("\n姓名：%s\n", name);
+    printf("年龄：%d\n", age);
+    printf("成绩：%.1f\n", score);
+    return 0;
+}</code></pre>
+
+    <h3>4. 简单运算语句</h3>
+    <p>通过算术运算符实现数值计算，结果可直接赋值给变量或用于输出。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 15, b = 4;
+    int sum, sub, mul, div, mod;
+
+    sum = a + b; // 加法：19
+    sub = a - b; // 减法：11
+    mul = a * b; // 乘法：60
+    div = a / b; // 整数除法：3
+    mod = a % b; // 取余：3
+
+    printf("加法：%d\n", sum);
+    printf("减法：%d\n", sub);
+    printf("乘法：%d\n", mul);
+    printf("除法：%d\n", div);
+    printf("取余：%d\n", mod);
+    return 0;
+}</code></pre>
+
+    <h2>三、完整顺序结构程序案例</h2>
+    <h3>案例1：简单数值计算（矩形面积周长）</h3>
+    <p>输入矩形长和宽，按顺序计算面积和周长并输出，全程无分支跳转。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 1. 定义变量
+    float length, width, area, perimeter;
+
+    // 2. 输入数据
+    printf("请输入矩形的长：");
+    scanf("%f", &amp;length);
+    printf("请输入矩形的宽：");
+    scanf("%f", &amp;width);
+
+    // 3. 计算面积和周长
+    area = length * width;
+    perimeter = 2 * (length + width);
+
+    // 4. 输出结果
+    printf("\n矩形面积：%.2f\n", area);
+    printf("矩形周长：%.2f\n", perimeter);
+
+    return 0;
+}</code></pre>
+
+    <h3>案例2：数据转换与输出（摄氏度转华氏度）</h3>
+    <p>按“输入→转换计算→输出”顺序执行，实现温度单位转换。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 定义变量：c为摄氏度，f为华氏度
+    float c, f;
+
+    // 输入摄氏度
+    printf("请输入摄氏度温度：");
+    scanf("%f", &amp;c);
+
+    // 转换公式：华氏度 = 摄氏度×9/5 + 32
+    f = c * 9 / 5 + 32;
+
+    // 输出转换结果
+    printf("对应的华氏度温度：%.1f\n", f);
+    return 0;
+}</code></pre>
+
+    <h2>四、注意事项</h2>
+    <ul>
+        <li><strong>语句顺序不可乱</strong>：顺序结构依赖代码书写顺序，需按逻辑排列（如先定义变量再使用、先输入再计算），否则编译报错或结果异常。</li>
+        <li><strong>分号不可遗漏</strong>：C语言每条语句末尾必须加<code>;</code>，否则编译报错。</li>
+        <li><strong>变量先定义后使用</strong>：未定义的变量无法直接赋值或运算，需先声明变量类型。</li>
+        <li><strong>输入地址符不可少</strong>：<code>scanf()</code>读取基本类型变量时，变量前需加<code>&amp;</code>（字符串数组除外）。</li>
+        <li><strong>数据类型匹配</strong>：赋值、运算时需注意数据类型一致，避免精度损失或运算错误（如整型与浮点型混合运算需留意结果类型）。</li>
+    </ul>
+
+    <h2>五、顺序结构的作用</h2>
+    <p>顺序结构是程序的基础骨架，复杂程序（含选择、循环结构）本质是由多个顺序结构模块组合而成。无论是简单的数据处理，还是复杂功能的局部逻辑，都离不开顺序执行的核心逻辑，掌握顺序结构是学习其他复杂结构的前提。</p>
+</body>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</html>
+
+<data-inline-no-margin type="video-group" value_id="30144352726460674_null_0_30707_102_0" alt="" extra="{&quot;video_title_show&quot;:true}"></data-inline-no-margin>

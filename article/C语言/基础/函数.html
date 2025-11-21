@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言函数</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言函数</h1>
+    <p>函数是C语言中封装独立功能的代码模块，通过函数可将复杂程序拆分简化，实现代码复用、降低维护成本。C语言函数分为库函数（系统提供）和自定义函数（用户编写），核心掌握函数定义、声明、调用及参数传递逻辑。</p>
+
+    <h2>一、函数核心概念</h2>
+    <ul>
+        <li>函数本质：封装特定功能的代码块，接收输入（参数）、处理逻辑、返回输出（返回值）。</li>
+        <li>函数组成：函数声明、函数定义、函数调用，三者缺一不可（库函数无需手动定义）。</li>
+        <li>主函数特殊地位：<code>main()</code>是程序入口函数，程序从main开始执行，其他函数需被调用才执行。</li>
+    </ul>
+
+    <h2>二、函数分类</h2>
+    <h3>1. 库函数（系统内置）</h3>
+    <p>由C语言标准库提供，直接调用即可使用，需引入对应头文件声明函数原型。</p>
+    <ul>
+        <li>输入输出类：<code>printf()</code>、<code>scanf()</code>（依赖<code>&lt;stdio.h&gt;</code>）</li>
+        <li>字符处理类：<code>toupper()</code>、<code>tolower()</code>（依赖<code>&lt;ctype.h&gt;</code>）</li>
+        <li>数学计算类：<code>sqrt()</code>（开平方）、<code>pow()</code>（幂运算）（依赖<code>&lt;math.h&gt;</code>）</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt; // 引入数学库头文件
+
+int main() {
+    // 调用库函数sqrt()计算开平方
+    float res = sqrt(16);
+    printf("16的平方根：%.1f\n", res);
+
+    // 调用库函数pow()计算2^3
+    float pow_res = pow(2, 3);
+    printf("2的3次方：%.1f\n", pow_res);
+    return 0;
+}</code></pre>
+
+    <h3>2. 自定义函数（用户编写）</h3>
+    <p>根据需求自定义功能代码块，需手动完成声明、定义与调用，灵活适配业务场景。</p>
+
+    <h2>三、自定义函数基础用法</h2>
+    <h3>1. 函数定义（实现功能逻辑）</h3>
+    <p>语法：<code>返回值类型 函数名(参数列表) { 函数体（功能逻辑）; return 返回值; }</code></p>
+    <ul>
+        <li>返回值类型：函数执行后返回数据的类型，无返回值用<code>void</code>，有返回值需用<code>return</code>返回对应类型数据。</li>
+        <li>函数名：遵循标识符规则（字母、数字、下划线，首字符非数字），见名知义。</li>
+        <li>参数列表：接收外部传入的数据，无参数写<code>void</code>或空括号，多个参数用逗号分隔。</li>
+    </ul>
+
+    <h3>2. 函数声明（告知编译器函数信息）</h3>
+    <p>语法：<code>返回值类型 函数名(参数列表);</code></p>
+    <p>作用：提前告知编译器函数的返回值类型、函数名、参数类型，避免编译报错，需放在调用之前（主函数前或主函数内调用前）。</p>
+
+    <h3>3. 函数调用（执行函数功能）</h3>
+    <p>语法：<code>函数名(实参列表);</code></p>
+    <p>作用：触发函数执行，实参需与形参类型、数量一致，有返回值时可接收返回结果或直接使用。</p>
+
+    <h3>完整示例：自定义函数求两数之和</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 1. 函数声明（告知编译器函数信息）
+int add(int a, int b);
+
+int main() {
+    int num1 = 10, num2 = 20;
+    // 2. 函数调用（传入实参，接收返回值）
+    int sum = add(num1, num2);
+    printf("两数之和：%d\n", sum);
+    return 0;
+}
+
+// 3. 函数定义（实现求和逻辑）
+int add(int a, int b) {
+    int res = a + b;
+    return res; // 返回计算结果（类型与函数返回值类型一致）
+}</code></pre>
+
+    <h2>四、函数参数传递方式</h2>
+    <h3>1. 值传递（常用）</h3>
+    <p>核心：将实参的<strong>值拷贝</strong>给形参，形参修改不影响实参本身（实参、形参占用独立内存）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 形参x、y接收实参拷贝值
+void swap(int x, int y) {
+    int temp = x;
+    x = y;
+    y = temp;
+    printf("函数内：x=%d, y=%d\n", x, y); // 交换后：x=20, y=10
+}
+
+int main() {
+    int a = 10, b = 20;
+    swap(a, b); // 传入实参a、b的值
+    printf("函数外：a=%d, b=%d\n", a, b); // 实参未变：a=10, b=20
+    return 0;
+}</code></pre>
+
+    <h3>2. 地址传递（修改实参用）</h3>
+    <p>核心：将实参的<strong>内存地址</strong>传给形参（形参为指针变量），通过指针间接修改实参的值（操作同一块内存）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 形参为指针，接收实参地址
+void swap(int *x, int *y) {
+    int temp = *x;
+    *x = *y; // 通过指针修改实参值
+    *y = temp;
+    printf("函数内：*x=%d, *y=%d\n", *x, *y); // 交换后：20, 10
+}
+
+int main() {
+    int a = 10, b = 20;
+    swap(&amp;a, &amp;b); // 传入实参a、b的地址
+    printf("函数外：a=%d, b=%d\n", a, b); // 实参已修改：20, 10
+    return 0;
+}</code></pre>
+
+    <h2>五、函数常见类型</h2>
+    <h3>1. 无参无返回值函数</h3>
+    <p>函数无参数输入，无结果返回，仅执行固定功能（返回值类型为<code>void</code>，参数列表可空或写<code>void</code>）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 函数声明（无参无返回值）
+void printHello();
+
+int main() {
+    printHello(); // 函数调用
+    return 0;
+}
+
+// 函数定义
+void printHello() {
+    printf("Hello C Function!\n");
+    // 无return语句（或写return;，无需返回值）
+}</code></pre>
+
+    <h3>2. 无参有返回值函数</h3>
+    <p>函数无参数输入，执行后返回固定结果（返回值类型为对应数据类型）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 函数声明（无参有返回值）
+int getRandomNum();
+
+int main() {
+    int num = getRandomNum();
+    printf("随机数（固定示例）：%d\n", num);
+    return 0;
+}
+
+// 函数定义（返回固定值，实际可结合库函数实现真随机）
+int getRandomNum() {
+    return 100; // 返回整型结果
+}</code></pre>
+
+    <h3>3. 有参无返回值函数</h3>
+    <p>函数接收参数输入，执行功能但不返回结果（返回值类型为<code>void</code>）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 函数声明（有参无返回值）
+void printNum(int n);
+
+int main() {
+    printNum(5); // 传入实参5
+    return 0;
+}
+
+// 函数定义（接收参数n，打印1-n）
+void printNum(int n) {
+    for (int i = 1; i <= n; i++) {
+        printf("%d ", i);
+    }
+}</code></pre>
+
+    <h3>4. 有参有返回值函数（最常用）</h3>
+    <p>函数接收参数输入，执行逻辑后返回结果，适配多数业务场景（如计算、判断）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 函数声明（有参有返回值，判断是否为偶数）
+int isEven(int num);
+
+int main() {
+    int n = 8;
+    int flag = isEven(n);
+    if (flag == 1) {
+        printf("%d是偶数\n", n);
+    } else {
+        printf("%d是奇数\n", n);
+    }
+    return 0;
+}
+
+// 函数定义（接收num，返回1表示偶数，0表示奇数）
+int isEven(int num) {
+    if (num % 2 == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}</code></pre>
+
+    <h2>六、函数嵌套调用</h2>
+    <p>函数内部调用另一个函数，嵌套层级无限制，执行流程：调用函数时暂停当前函数，先执行被调用函数，执行完返回继续执行原函数。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 函数1：求两数之和
+int add(int a, int b) {
+    return a + b;
+}
+
+// 函数2：求三数之和（嵌套调用add函数）
+int addThree(int a, int b, int c) {
+    // 调用add函数求前两数和，再与第三数相加
+    return add(add(a, b), c);
+}
+
+int main() {
+    int sum = addThree(10, 20, 30);
+    printf("三数之和：%d\n", sum); // 输出60
+    return 0;
+}</code></pre>
+
+    <h2>七、函数递归调用（进阶）</h2>
+    <p>函数自身调用自身，需满足两个条件：1. 递归终止条件（避免死递归）；2. 递归递推公式（逐步逼近终止条件），适用于分治场景（如阶乘、斐波那契数列）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 递归求n的阶乘（n! = n*(n-1)*...*1）
+int factorial(int n) {
+    // 终止条件：n=1时返回1
+    if (n == 1) {
+        return 1;
+    }
+    // 递推公式：n! = n*(n-1)!
+    return n * factorial(n - 1);
+}
+
+int main() {
+    int n = 5;
+    int res = factorial(n);
+    printf("%d的阶乘：%d\n", n, res); // 输出120
+    return 0;
+}</code></pre>
+
+    <h2>八、函数使用注意事项</h2>
+    <ul>
+        <li><strong>声明与定义一致</strong>：函数声明的返回值类型、函数名、参数类型需与定义完全匹配，否则编译报错。</li>
+        <li><strong>参数匹配</strong>：调用函数时，实参的类型、数量需与形参一致，否则可能出现逻辑错误。</li>
+        <li><strong>return语句规范</strong>：有返回值的函数必须用return返回对应类型数据；void函数可省略return，或写<code>return;</code>（无返回值）。</li>
+        <li><strong>递归终止条件</strong>：递归函数必须设置终止条件，否则会导致死递归，耗尽内存程序崩溃。</li>
+        <li><strong>变量作用域</strong>：函数内定义的局部变量仅在函数内有效，函数执行完后内存释放，外部无法访问。</li>
+    </ul>
+
+    <h2>九、经典案例</h2>
+    <h3>案例1：自定义函数求数组最大值</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 函数：接收数组和长度，返回最大值
+int getMax(int arr[], int len) {
+    int max = arr[0];
+    for (int i = 1; i &lt; len; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
+    return max;
+}
+
+int main() {
+    int arr[] = {12, 45, 8, 36, 99};
+    int len = sizeof(arr) / sizeof(arr[0]); // 计算数组长度
+    int maxVal = getMax(arr, len);
+    printf("数组最大值：%d\n", maxVal); // 输出99
+    return 0;
+}</code></pre>
+
+    <h3>案例2：自定义函数实现冒泡排序</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 函数：接收数组和长度，对数组升序排序（地址传递，修改原数组）
+void bubbleSort(int arr[], int len) {
+    for (int i = 0; i &lt; len - 1; i++) {
+        for (int j = 0; j &lt; len - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// 函数：打印数组
+void printArr(int arr[], int len) {
+    for (int i = 0; i &lt; len; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int arr[] = {34, 12, 56, 23, 8};
+    int len = sizeof(arr) / sizeof(arr[0]);
+    printf("排序前：");
+    printArr(arr, len);
+    
+    bubbleSort(arr, len); // 调用排序函数
+    
+    printf("排序后：");
+    printArr(arr, len); // 输出8 12 23 34 56
+    return 0;
+}</code></pre>
+</body>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</html>

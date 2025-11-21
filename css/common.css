@@ -1,0 +1,49 @@
+.ver-hori-center {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.ver-center {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.hori-center {
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.inset {
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.clear-fix::after {
+	content: "";
+	display: block;
+	visibility: hidden;
+	height: 0;
+	clear: both;
+}
+
+/* 整个滚动条区域 */
+.graceful-scroll-bar::-webkit-scrollbar {
+  width: 8px;        /* 垂直滚动条宽度 */
+  height: 8px;       /* 水平滚动条高度 */
+  background: #f5f5f5; /* 滚动条轨道背景 */
+}
+
+/* 滚动条轨道 */
+.graceful-scroll-bar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+/* 滚动条滑块 */
+.graceful-scroll-bar::-webkit-scrollbar-thumb {
+  background: #D9C6B8;
+  border-radius: 4px;
+}

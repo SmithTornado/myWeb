@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Python常量</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Python常量</h1>
+    <p>常量是值定义后不可修改的量，用于存储固定不变的数据（如圆周率、配置参数）。Python<strong>无内置强制常量机制</strong>，需通过命名约定、第三方模块或自定义逻辑实现常量功能。</p>
+
+    <h2>一、基础方式：大写命名约定（最常用）</h2>
+    <p>Python开发者默认遵循「全大写字母命名」表示常量，仅为编程规范，<strong>无法强制禁止修改</strong>，但违反约定会降低代码可读性，不推荐修改。</p>
+    <pre><code class="language-python"># 1. 单个常量定义
+PI = 3.1415926  # 圆周率常量
+MAX_AGE = 120   # 最大年龄常量
+APP_NAME = "Python学习工具"  # 应用名称常量
+
+# 2. 批量定义（常用字典归类配置型常量）
+CONFIG = {
+    "HOST": "localhost",
+    "PORT": 8080,
+    "USER": "admin"
+}
+
+# 3. 使用常量
+print("圆周率：", PI)
+print("应用名：", APP_NAME)
+print("服务端口：", CONFIG["PORT"])
+
+# 注意：语法允许修改，但绝对不推荐
+PI = 3.14  # 无语法错误，但违反常量约定
+print("修改后PI：", PI)  # 输出3.14</code></pre>
+
+    <h2>二、强制方式1：使用const第三方模块</h2>
+    <p>通过第三方库<code>const</code>可实现强制常量（修改会报错），需先安装模块，适合需要严格限制常量修改的场景。</p>
+
+    <h3>1. 安装const模块</h3>
+    <pre><code class="language-bash"># 命令行执行安装
+pip install const</code></pre>
+
+    <h3>2. 模块使用示例</h3>
+    <pre><code class="language-python">from const import const
+
+# 定义常量（用const.CONST赋值）
+const.PI = 3.1415926
+const.MAX_SCORE = 100
+const.DB_NAME = "test_db"
+
+# 使用常量
+print("最大分数：", const.MAX_SCORE)  # 输出100
+
+# 尝试修改常量：直接报错（ConstError）
+try:
+    const.PI = 3.14
+except Exception as e:
+    print("修改常量报错：", e)  # 输出错误信息，禁止修改</code></pre>
+
+    <h2>三、强制方式2：自定义常量类（无需第三方库）</h2>
+    <p>通过自定义类重写属性赋值方法，实现强制常量逻辑，无需安装依赖，兼容性更强。</p>
+    <pre><code class="language-pythonclass Const:
+    # 初始化时定义常量（仅首次赋值有效）
+    def __init__(self):
+        self.PI = 3.1415926
+        self.MIN_NUM = 0
+        self.LOGO = "Python"
+    
+    # 重写__setattr__方法：禁止修改已定义的属性（常量）
+    def __setattr__(self, name, value):
+        # 判断属性是否已存在，存在则报错（禁止修改）
+        if hasattr(self, name):
+            raise TypeError(f"常量'{name}'不可修改")
+        # 不存在则正常赋值（初始化常量）
+        super().__setattr__(name, value)
+
+# 使用自定义常量类
+const = Const()
+
+# 1. 读取常量
+print("圆周率：", const.PI)
+print("Logo：", const.LOGO)
+
+# 2. 尝试修改常量：报错（TypeError）
+try:
+    const.PI = 3.14
+except TypeError as e:
+    print("修改报错：", e)  # 输出"常量'PI'不可修改"
+
+# 3. 尝试新增常量：正常生效（仅初始化后首次赋值允许）
+const.NEW_CONST = 100
+print("新增常量：", const.NEW_CONST)  # 输出100
+
+# 4. 修改新增常量：报错
+try:
+    const.NEW_CONST = 200
+except TypeError as e:
+    print("修改新增常量报错：", e)</code></pre>
+
+    <h2>四、常量常用场景</h2>
+    <ul>
+        <li>固定数值：如圆周率<code>PI</code>、重力加速度<code>G</code>、最大/最小值限制。</li>
+        <li>配置参数：如服务端口<code>PORT</code>、数据库地址<code>DB_HOST</code>、接口密钥。</li>
+        <li>状态标识：如成功状态码<code>SUCCESS_CODE = 200</code>、失败状态码<code>ERROR_CODE = 500</code>。</li>
+        <li>固定文本：如应用名称、提示文案模板等不变的字符串。</li>
+    </ul>
+
+    <h2>五、使用注意事项</h2>
+    <ul>
+        <li>日常开发优先用「大写命名约定」，简洁高效，符合Python简洁风格。</li>
+        <li>企业级严格项目可选用「const模块」或「自定义常量类」，避免误修改。</li>
+        <li>常量命名需见名知义，避免模糊命名（如用<code>PI</code>而非<code>P</code>，<code>MAX_AGE</code>而非<code>MA</code>）。</li>
+        <li>批量配置型常量建议用字典归类，或自定义类管理，方便统一维护。</li>
+    </ul>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

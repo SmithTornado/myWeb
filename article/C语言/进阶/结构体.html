@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言结构体</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../css/common.css">
+</head>
+<body>
+    <h1>C语言结构体</h1>
+    <p>结构体是C语言自定义数据类型，可整合不同类型数据（如整型、字符型、浮点型）为一个整体，用于描述复杂对象（如学生、商品），解决单一数据类型无法满足的复合数据存储需求。</p>
+
+    <h2>一、结构体定义</h2>
+    <p>语法：<code>struct 结构体名 { 数据类型 成员1; 数据类型 成员2; ... };</code>，仅声明结构体类型，不占用内存。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 定义结构体Student，描述学生信息（学号、姓名、成绩）
+struct Student {
+    int id;         // 整型成员：学号
+    char name[20];  // 字符数组成员：姓名
+    float score;    // 浮点型成员：成绩
+};
+
+int main() {
+    return 0;
+}</code></pre>
+
+    <h2>二、结构体变量定义</h2>
+    <p>声明结构体类型后，定义对应变量才占用内存，常见3种定义方式。</p>
+
+    <h3>1. 先定义结构体，再定义变量</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 1. 定义结构体类型
+struct Student {
+    int id;
+    char name[20];
+    float score;
+};
+
+int main() {
+    // 2. 定义结构体变量stu1、stu2
+    struct Student stu1;
+    struct Student stu2;
+    return 0;
+}</code></pre>
+
+    <h3>2. 定义结构体时，直接定义变量</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 定义结构体同时，定义变量stu1、stu2
+struct Student {
+    int id;
+    char name[20];
+    float score;
+} stu1, stu2;
+
+int main() {
+    return 0;
+}</code></pre>
+
+    <h3>3. 匿名结构体定义变量（无结构体名，仅用一次）</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 匿名结构体（无名称），直接定义变量stu
+struct {
+    int id;
+    char name[20];
+    float score;
+} stu;
+
+int main() {
+    return 0;
+}</code></pre>
+
+    <h2>三、结构体成员访问与初始化</h2>
+    <p>结构体变量通过 <code>.</code>（点运算符）访问成员；定义变量时可直接初始化，支持按顺序或指定成员赋值。</p>
+
+    <h3>1. 结构体成员访问与修改</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt; // 字符串赋值需用strcpy，依赖此头文件
+
+struct Student {
+    int id;
+    char name[20];
+    float score;
+};
+
+int main() {
+    struct Student stu;
+    
+    // 1. 成员赋值
+    stu.id = 101;                          // 整型成员直接赋值
+    strcpy(stu.name, "张三");              // 字符数组成员用strcpy赋值（不可直接用=）
+    stu.score = 92.5;                      // 浮点型成员直接赋值
+    
+    // 2. 成员访问与打印
+    printf("学号：%d\n", stu.id);
+    printf("姓名：%s\n", stu.name);
+    printf("成绩：%.1f\n", stu.score);
+    
+    // 3. 成员修改
+    stu.score = 95.0;
+    printf("修改后成绩：%.1f\n", stu.score);
+    return 0;
+}</code></pre>
+
+    <h3>2. 结构体变量初始化</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+struct Student {
+    int id;
+    char name[20];
+    float score;
+};
+
+int main() {
+    // 方式1：按结构体成员顺序初始化
+    struct Student stu1 = {101, "张三", 92.5};
+    
+    // 方式2：指定成员名初始化（顺序可随意）
+    struct Student stu2 = {
+        .name = "李四",
+        .id = 102,
+        .score = 88.0
+    };
+    
+    // 打印验证
+    printf("stu1：%d %s %.1f\n", stu1.id, stu1.name, stu1.score);
+    printf("stu2：%d %s %.1f\n", stu2.id, stu2.name, stu2.score);
+    return 0;
+}</code></pre>
+
+    <h2>四、结构体数组</h2>
+    <p>存储多个结构体变量的数组，每个元素都是结构体类型，用于批量管理复合数据。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+struct Student {
+    int id;
+    char name[20];
+    float score;
+};
+
+int main() {
+    // 定义结构体数组，存储3个学生信息并初始化
+    struct Student stuArr[3] = {
+        {101, "张三", 92.5},
+        {102, "李四", 88.0},
+        {103, "王五", 95.0}
+    };
+    
+    // 遍历结构体数组，打印所有学生信息
+    printf("所有学生信息：\n");
+    for (int i = 0; i < 3; i++) {
+        printf("第%d个学生：%d %s %.1f\n", i+1, stuArr[i].id, stuArr[i].name, stuArr[i].score);
+    }
+    return 0;
+}</code></pre>
+
+    <h2>五、注意事项</h2>
+    <ul>
+        <li>结构体成员可包含基本数据类型、数组、其他结构体（嵌套结构体），但不可包含自身（避免无限递归）。</li>
+        <li>字符数组类型的结构体成员，不可直接用<code>=</code>赋值，需用字符串函数<code>strcpy()</code>（依赖<code>&lt;string.h&gt;</code>头文件）。</li>
+        <li>结构体变量不可整体直接赋值（除初始化时），需逐个成员赋值或用结构体变量间赋值（同类型结构体可直接赋值）。</li>
+        <li>结构体定义仅声明类型，不占用内存；结构体变量定义后才分配内存，内存大小为所有成员内存之和。</li>
+    </ul>
+
+    <script src="../../../highlight/highlight.min.js"></script>
+    <script src="../../js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            hljs.highlightAll();
+            addCopy('pre', 20, 20);
+        });
+    </script>
+</body>
+</html>

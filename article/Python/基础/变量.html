@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Python变量</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Python变量</h1>
+    <p>变量是Python中存储数据的容器，无需提前声明类型，直接赋值即可使用，值和类型可动态修改，是程序处理数据的核心载体。</p>
+
+    <h2>一、变量定义与赋值</h2>
+    <p>语法：<code>变量名 = 值</code>，<code>=</code>为赋值符，将右侧值存入左侧变量容器。</p>
+    <pre><code class="language-python"># 1. 基础赋值：不同类型变量定义
+num = 100          # 整数类型
+price = 99.9       # 浮点数类型
+name = "小明"      # 字符串类型
+is_valid = True    # 布尔类型（True/False）
+
+# 2. 打印变量值
+print(num)         # 输出：100
+print(name)        # 输出：小明
+
+# 3. 一行定义多个变量
+a, b, c = 1, 2, 3  # 多变量分别赋值
+x = y = 5          # 多变量赋相同值
+print(a, b, c)     # 输出：1 2 3
+print(x, y)        # 输出：5 5</code></pre>
+
+    <h2>二、变量命名规则</h2>
+    <h3>1. 必遵守规则</h3>
+    <ul>
+        <li>由字母、数字、下划线组成，不可含空格/特殊符号（@、#等）</li>
+        <li>不能以数字开头，不能使用Python关键字（if、for、print等）</li>
+        <li>区分大小写（name和Name是不同变量）</li>
+    </ul>
+    <h3>2. 推荐规范</h3>
+    <ul>
+        <li>蛇形命名法：小写字母+下划线（如user_id、total_price）</li>
+        <li>见名知义：变量名体现数据含义（age存年龄、phone存手机号）</li>
+    </ul>
+    <pre><code class="language-python"># 合法变量名（推荐）
+user_name = "小红"
+age_18 = 18
+score = 95
+
+# 非法变量名（报错）
+# 123num = 20  # 以数字开头
+# user@name = "小刚"  # 含特殊符号
+# if = 5  # 使用关键字</code></pre>
+
+    <h2>三、变量常见数据类型</h2>
+    <p>用<code>type(变量名)</code>可查看变量类型，常用基础类型如下：</p>
+    <pre><code class="language-python"> 1. 整数（int）：正负数、0
+num1 = 20
+num2 = -5
+print(type(num1))  # 输出：&lt;class 'int'&gt;
+
+# 2. 浮点数（float）：带小数的数
+f1 = 19.9
+f2 = 30.0
+print(type(f1))    # 输出：&lt;class 'float'&gt;
+
+# 3. 字符串（str）：文本，单/双引号包裹
+s1 = 'Python'
+s2 = "编程学习"
+print(type(s1))    # 输出：&lt;class 'str'&gt;
+
+# 4. 布尔（bool）：仅True（真）、False（假）
+b1 = True
+b2 = False
+print(type(b1))    # 输出：&lt;class 'bool'&gt;</code></pre>
+
+    <h2>四、变量核心操作</h2>
+    <h3>1. 重新赋值</h3>
+    <p>变量值和类型可随时修改，新值会覆盖旧值。</p>
+    <pre><code class="language-pythonvar = 10    # 初始为整数
+print(var)   # 输出：10
+
+var = 20.5   # 改为浮点数
+print(var)   # 输出：20.5
+
+var = "修改" # 改为字符串
+print(var)   # 输出：修改</code></pre>
+
+    <h3>2. 变量运算</h3>
+    <pre><code class="language">python# 数值运算（加减乘除）
+a = 10
+b = 3
+print(a + b)  # 加法：13
+print(a * b)  # 乘法：30
+print(a / b)  # 除法：3.3333333333333335
+
+# 字符串拼接（+号）
+s1 = "Hello"
+s2 = "Python"
+print(s1 + " " + s2)  # 输出：Hello Python</code></pre>
+
+    <h2>五、注意事项</h2>
+    <ul>
+        <li>变量必须先赋值再使用，未赋值直接调用会报错</li>
+        <li><code>=</code>是赋值，判断是否相等用<code>==</code>（如a == b）</li>
+        <li>不与Python内置函数重名（如不定义print = 10，会覆盖打印功能）</li>
+    </ul>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

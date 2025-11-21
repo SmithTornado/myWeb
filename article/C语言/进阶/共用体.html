@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言共同体</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../css/common.css">
+</head>
+<body>
+    <h1>C语言共同体</h1>
+    <p>共同体（Union，又称共用体）是C语言自定义数据类型，核心特性是<strong>所有成员共用同一块内存空间</strong>，同一时间仅能使用一个成员，可大幅节省内存，适用于不同场景复用内存的需求。</p>
+
+    <h2>一、共同体定义</h2>
+    <p>语法：<code>union 共同体名 { 数据类型 成员1; 数据类型 成员2; ... };</code>，仅声明类型，不分配内存，成员类型可不同。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 定义共同体Data，包含3种不同类型成员
+union Data {
+    int num;         // 整型成员
+    char ch;         // 字符型成员
+    float score;     // 浮点型成员
+};
+
+int main() {
+    return 0;
+}</code></pre>
+
+    <h2>二、共同体变量定义</h2>
+    <p>声明共同体类型后，定义变量才分配内存，支持3种定义方式，与结构体类似。</p>
+
+    <h3>1. 先定义类型，再定义变量</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 1. 声明共同体类型
+union Data {
+    int num;
+    char ch;
+    float score;
+};
+
+int main() {
+    // 2. 定义共同体变量d1、d2
+    union Data d1;
+    union Data d2;
+    return 0;
+}</code></pre>
+
+    <h3>2. 定义类型时，直接定义变量</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 声明类型同时，定义变量d1、d2
+union Data {
+    int num;
+    char ch;
+    float score;
+} d1, d2;
+
+int main() {
+    return 0;
+}</code></pre>
+
+    <h3>3. 匿名共同体（无类型名，仅用一次）</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 匿名共同体，直接定义变量d
+union {
+    int num;
+    char ch;
+    float score;
+} d;
+
+int main() {
+    return 0;
+}</code></pre>
+
+    <h2>三、共同体成员访问与初始化</h2>
+    <p>成员访问用 <code>.</code>（点运算符），与结构体一致；<strong>仅能初始化一个成员</strong>（多成员初始化无效，仅第一个生效）。</p>
+
+    <h3>1. 成员访问与赋值</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+union Data {
+    int num;
+    char ch;
+    float score;
+};
+
+int main() {
+    union Data d;
+    
+    // 给整型成员赋值
+    d.num = 100;
+    printf("访问num成员：%d\n", d.num); // 输出100
+    
+    // 给字符成员赋值（会覆盖num成员的值）
+    d.ch = 'A';
+    printf("访问ch成员：%c\n", d.ch);   // 输出A
+    printf("覆盖后num成员：%d\n", d.num); // 值被修改，输出65（'A'的ASCII码）
+    
+    // 给浮点成员赋值（覆盖之前所有值）
+    d.score = 95.5;
+    printf("访问score成员：%.1f\n", d.score); // 输出95.5
+    return 0;
+}</code></pre>
+
+    <h3>2. 共同体初始化</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+union Data {
+    int num;
+    char ch;
+    float score;
+};
+
+int main() {
+    // 方式1：按成员顺序初始化（仅第一个成员生效）
+    union Data d1 = {200}; // 仅num成员被初始化为200
+    printf("d1.num：%d\n", d1.num); // 输出200
+    
+    // 方式2：指定成员初始化（推荐，清晰无歧义）
+    union Data d2 = {.ch = 'B'}; // 仅ch成员被初始化为'B'
+    printf("d2.ch：%c\n", d2.ch); // 输出B
+    
+    return 0;
+}</code></pre>
+
+    <h2>四、共同体核心特性（内存共享）</h2>
+    <h3>1. 内存大小 = 最大成员的内存大小</h3>
+    <p>所有成员共用同一块内存，内存空间按最大成员的大小分配，而非所有成员大小之和（与结构体本质区别）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+union Data {
+    int num;         // int占4字节
+    char ch;         // char占1字节
+    float score;     // float占4字节
+};
+
+struct Stu {
+    int num;         // 4字节
+    char ch;         // 1字节
+    float score;     // 4字节
+};
+
+int main() {
+    // 共同体大小 = 最大成员大小（4字节）
+    printf("共同体Data大小：%zu字节\n", sizeof(union Data)); // 输出4
+    
+    // 结构体大小 = 所有成员大小之和（9字节，因内存对齐可能略大）
+    printf("结构体Stu大小：%zu字节\n", sizeof(struct Stu)); // 输出12（内存对齐后）
+    return 0;
+}</code></pre>
+
+    <h3>2. 成员赋值相互覆盖</h3>
+    <p>同一时间仅能有效使用一个成员，给任意成员赋值后，其他成员的值会被覆盖（内存被复用），读取覆盖后的成员值无实际意义。</p>
+
+    <h2>五、共同体与结构体的核心区别</h2>
+    <ul>
+        <li>内存分配：共同体成员<strong>共用一块内存</strong>，大小=最大成员大小；结构体成员<strong>各自独立内存</strong>，大小=所有成员大小之和（含内存对齐）。</li>
+        <li>成员使用：共同体<strong>同一时间仅能用一个成员</strong>，赋值覆盖；结构体成员可<strong>同时使用</strong>，互不影响。</li>
+        <li>初始化：共同体<strong>仅能初始化一个成员</strong>；结构体可初始化所有成员。</li>
+        <li>使用场景：共同体节省内存，适用于“不同时使用多个数据”的场景；结构体整合复合数据，适用于“同时使用多个数据”的场景。</li>
+    </ul>
+
+    <h2>六、使用注意事项</h2>
+    <ul>
+        <li>同一时间仅操作一个成员，避免读取被覆盖的成员值（结果不可控）。</li>
+        <li>初始化时仅能给一个成员赋值，多成员初始化仅第一个生效，其余无效。</li>
+        <li>共同体不支持嵌套共同体/结构体（部分编译器兼容，但不推荐，可读性差）。</li>
+        <li>成员类型可不同，但共用内存会导致类型转换相关的隐性问题，需谨慎使用。</li>
+    </ul>
+
+    <script src="../../../highlight/highlight.min.js"></script>
+    <script src="../../js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            hljs.highlightAll();
+            addCopy('pre', 20, 20);
+        });
+    </script>
+</body>
+</html>

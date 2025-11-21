@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言选择结构</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言选择结构</h1>
+    <p>选择结构是程序三大基本结构之一，核心用于根据条件判断执行不同代码分支，打破顺序执行的固定逻辑，实现程序灵活跳转。C语言常用选择结构有if语句（单分支、双分支、多分支）和switch语句，需掌握语法规则、执行流程及适用场景。</p>
+
+    <h2>一、if语句（灵活判断，适用复杂条件）</h2>
+    <p>通过条件表达式真假决定代码执行分支，条件为真（非0）执行对应分支，为假（0）跳过，支持嵌套使用。</p>
+
+    <h3>1. 单分支if语句（满足条件才执行）</h3>
+    <p>语法：<code>if(条件表达式) { 满足条件执行的代码; }</code></p>
+    <p>执行流程：判断条件表达式，为真执行大括号内代码，为假直接跳过，执行后续代码。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int score = 92;
+    // 条件成立（92>=90为真），执行打印语句
+    if (score >= 90) {
+        printf("成绩优秀！\n");
+    }
+    printf("程序结束\n");
+    return 0;
+}</code></pre>
+
+    <h3>2. 双分支if-else语句（二选一执行）</h3>
+    <p>语法：<code>if(条件表达式) { 条件为真执行; } else { 条件为假执行; }</code></p>
+    <p>执行流程：条件为真走if分支，为假走else分支，两个分支必执行一个。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int num;
+    printf("输入一个整数：");
+    scanf("%d", &amp;num);
+    // 判断奇偶性
+    if (num % 2 == 0) {
+        printf("%d是偶数\n", num);
+    } else {
+        printf("%d是奇数\n", num);
+    }
+    return 0;
+}</code></pre>
+
+    <h3>3. 多分支if-else if-else语句（多选一执行）</h3>
+    <p>语法：<code>if(条件1) { 执行1; } else if(条件2) { 执行2; } ... else { 所有条件都假执行; }</code></p>
+    <p>执行流程：从上到下依次判断条件，满足第一个真条件执行对应分支，后续条件不再判断；所有条件都假则执行else分支。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int score;
+    printf("输入成绩：");
+    scanf("%d", &amp;score);
+    // 成绩等级判断
+    if (score >= 90 &amp;&amp; score <= 100) {
+        printf("等级：A（优秀）\n");
+    } else if (score >= 80 &amp;&amp; score < 90) {
+        printf("等级：B（良好）\n");
+    } else if (score >= 60 &amp;&amp; score < 80) {
+        printf("等级：C（及格）\n");
+    } else if (score >= 0 &amp;&amp; score < 60) {
+        printf("等级：D（不及格）\n");
+    } else {
+        printf("成绩输入错误！\n");
+    }
+    return 0;
+}</code></pre>
+
+    <h3>4. if语句嵌套（分支内包含分支）</h3>
+    <p>在if/else分支内嵌套另一个if语句，用于多层条件判断，嵌套层级无限制（建议不超过3层，保证可读性）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int score = 85;
+    if (score >= 60) {
+        printf("成绩及格\n");
+        // 嵌套判断优秀/良好
+        if (score >= 85) {
+            printf("属于优良水平\n");
+        }
+    } else {
+        printf("成绩不及格，需补考\n");
+    }
+    return 0;
+}</code></pre>
+
+    <h2>二、switch语句（多值匹配，适用固定值判断）</h2>
+    <p>通过变量与多个常量值匹配，执行对应分支，语法简洁，适合条件为“变量等于固定值”的场景。</p>
+    <p>语法：
+    <pre><code class="language-c">switch(表达式) {
+    case 常量1: 代码1; break;
+    case 常量2: 代码2; break;
+    ...
+    default: 所有常量不匹配时执行; break;
+}</code></pre>
+    </p>
+    <p>核心规则：
+        1. 表达式结果必须是整型或字符型；
+        2. case后是常量（不可为变量），且值唯一；
+        3. break用于终止当前分支，无break会继续执行下一个case（穿透现象）；
+        4. default可选，位置灵活，所有case不匹配时执行。
+    </p>
+
+    <h3>基础用法</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    char grade = 'B';
+    switch (grade) {
+        case 'A':
+            printf("成绩优秀\n");
+            break; // 终止分支，避免穿透
+        case 'B':
+            printf("成绩良好\n");
+            break;
+        case 'C':
+            printf("成绩及格\n");
+            break;
+        case 'D':
+            printf("成绩不及格\n");
+            break;
+        default:
+            printf("等级输入错误\n");
+            break;
+    }
+    return 0;
+}</code></pre>
+
+    <h3>穿透现象（合理利用）</h3>
+    <p>多个case需执行相同代码时，可省略break实现穿透，减少代码冗余。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int month;
+    printf("输入月份：");
+    scanf("%d", &amp;month);
+    // 判断季节（12、1、2为冬季，共用代码）
+    switch (month) {
+        case 12:
+        case 1:
+        case 2:
+            printf("冬季\n");
+            break;
+        case 3:
+        case 4:
+        case 5:
+            printf("春季\n");
+            break;
+        case 6:
+        case 7:
+        case 8:
+            printf("夏季\n");
+            break;
+        case 9:
+        case 10:
+        case 11:
+            printf("秋季\n");
+            break;
+        default:
+            printf("月份输入错误\n");
+            break;
+    }
+    return 0;
+}</code></pre>
+
+    <h2>三、if与switch对比及适用场景</h2>
+    <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+        <tr>
+            <<th>结构类型</</th>
+            <<th>核心特点</</th>
+            <<th>适用场景</</th>
+        </tr>
+        <tr>
+            <td>if语句</td>
+            <td>支持复杂条件（范围、逻辑组合），灵活度高，可嵌套</td>
+            <td>条件为范围判断、多逻辑组合（如score>=80&&score<90）</td>
+        </tr>
+        <tr>
+            <td>switch语句</td>
+            <td>仅支持固定值匹配，语法简洁，执行效率高</td>
+            <td>条件为变量等于多个固定值（如月份、等级、菜单选项）</td>
+        </tr>
+    </table>
+
+    <h2>四、常见问题与注意事项</h2>
+    <ul>
+        <li><strong>条件表达式类型</strong>：if条件表达式结果为非0即真、0即假；switch表达式必须是整型或字符型（本质按ASCII码匹配）。</li>
+        <li><strong>大括号省略问题</strong>：if/else分支仅1条语句时可省略大括号，建议始终加括号，避免逻辑错误。</li>
+        <li><strong>switch穿透风险</strong>：忘记加break会导致分支穿透，需按需使用（必要时保留，不必要时添加）。</li>
+        <li><strong>case常量唯一性</strong>：switch的case后必须是唯一常量，不可重复或使用变量。</li>
+        <li><strong>嵌套层级控制</strong>：if嵌套层级过多会降低代码可读性，可优化为多分支if-else if或switch。</li>
+        <li><strong>等于与赋值区分</strong>：if条件中避免用<code>=</code>（赋值）代替<code>==</code>（等于判断），否则逻辑异常。</li>
+    </ul>
+
+    <h2>五、经典案例</h2>
+    <h3>案例1：判断闰年</h3>
+    <p>闰年条件：能被4整除但不能被100整除，或能被400整除，用if多分支实现。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int year;
+    printf("输入年份：");
+    scanf("%d", &amp;year);
+    if ((year % 4 == 0 &amp;&amp; year % 100 != 0) || (year % 400 == 0)) {
+        printf("%d年是闰年\n", year);
+    } else {
+        printf("%d年是平年\n", year);
+    }
+    return 0;
+}</code></pre>
+
+    <h3>案例2：简单菜单选择</h3>
+    <p>模拟菜单功能，输入选项执行对应操作，用switch实现。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int choice;
+    printf("===== 简易菜单 =====\n");
+    printf("1. 查看信息\n");
+    printf("2. 修改信息\n");
+    printf("3. 退出程序\n");
+    printf("请选择功能（1-3）：");
+    scanf("%d", &amp;choice);
+
+    switch (choice) {
+        case 1:
+            printf("执行查看信息功能\n");
+            break;
+        case 2:
+            printf("执行修改信息功能\n");
+            break;
+        case 3:
+            printf("程序退出\n");
+            break;
+        default:
+            printf("选择错误，请输入1-3\n");
+            break;
+    }
+    return 0;
+}</code></pre>
+</body>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</html>
+
+<data-inline-no-margin type="video-group" value_id="30180974070089986_null_0_35439_102_0" alt="" extra="{&quot;video_title_show&quot;:true}"></data-inline-no-margin>

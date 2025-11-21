@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java输入输出教程</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Java输入输出教程</h1>
+    <p>Java输入输出（IO）是程序与外部交互的核心能力，<span style="color:#f56c6c">输入是读取外部数据到程序</span>（如键盘输入、文件数据），<span style="color:#f56c6c">输出是将程序数据传递到外部</span>（如控制台打印、写入文件），入门阶段重点掌握控制台IO（日常调试）和基础文件IO（数据持久化）。</p>
+
+    <section>
+        <h2>一、控制台输出（常用，调试核心）</h2>
+        <p>通过<code>System.out</code>类实现，核心3种输出方法，满足不同打印需求，无需额外导入包（Java内置）。</p>
+
+        <h3>1. 常用输出方法</h3>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>方法</th>
+                <th>功能</th>
+                <th>示例</th>
+                <th>输出效果</th>
+            </tr>
+            <tr>
+                <td>print(内容)</td>
+                <td>打印内容，不自动换行</td>
+                <td>System.out.print("Hello");</td>
+                <td>Hello（光标停在末尾）</td>
+            </tr>
+            <tr>
+                <td>println(内容)</td>
+                <td>打印内容，自动换行（最常用）</td>
+                <td>System.out.println("Java");</td>
+                <td>Java（光标换行到下一行）</td>
+            </tr>
+            <tr>
+                <td>printf(格式化字符串, 参数...)</td>
+                <td>格式化打印，按占位符拼接数据</td>
+                <td>System.out.printf("年龄：%d", 18);</td>
+                <td>年龄：18（支持精准格式控制）</td>
+            </tr>
+        </table>
+
+        <h3>2. 实战示例</h3>
+        <pre><code class="language-java">public class ConsoleOutput {
+    public static void main(String[] args) {
+        // 1. print：不换行打印
+        System.out.print("Hello ");
+        System.out.print("World\n"); // \n手动换行
+        
+        // 2. println：自动换行（日常首选）
+        String name = "张三";
+        int age = 20;
+        System.out.println("姓名：" + name);
+        System.out.println("年龄：" + age);
+        System.out.println("直接打印常量：12345");
+        
+        // 3. printf：格式化打印（常用占位符）
+        double score = 92.5;
+        // %s：字符串占位符，%d：整数占位符，%.1f：浮点数保留1位小数
+        System.out.printf("姓名：%s，年龄：%d，成绩：%.1f\n", name, age, score);
+        // 日期格式化（入门了解）
+        System.out.printf("当前时间：%tF %tT\n", new java.util.Date(), new java.util.Date());
+    }
+}</code></pre>
+
+        <h3>3. 常用格式化占位符（printf核心）</h3>
+        <ul>
+            <li>%d：整数（int、long等）</li>
+            <li>%f：浮点数（float、double，%.nf保留n位小数）</li>
+            <li>%s：字符串（String）</li>
+            <li>%c：字符（char）</li>
+            <li>%b：布尔值（true/false）</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>二、控制台输入（读取键盘数据）</h2>
+        <p>入门阶段首选<code>Scanner</code>类（简单易用），需导入<code>java.util.Scanner</code>包，核心步骤：创建Scanner对象→调用读取方法→关闭对象。</p>
+
+        <h3>1. 核心步骤</h3>
+        <ol>
+            <li>导入包：代码开头添加<code>import java.util.Scanner;</code>（必须）。</li>
+            <li>创建对象：<code>Scanner sc = new Scanner(System.in);</code>（绑定键盘输入）。</li>
+            <li>读取数据：调用sc的next系列方法（如nextInt()读整数、next()读字符串）。</li>
+            <li>关闭对象：<code>sc.close();</code>（释放资源，推荐执行）。</li>
+        </ol>
+
+        <h3>2. 常用读取方法</h3>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>方法</th>
+                <th>功能</th>
+                <th>适用场景</th>
+            </tr>
+            <tr>
+                <td>nextInt()</td>
+                <td>读取整数（int类型）</td>
+                <td>获取年龄、分数等整数数据</td>
+            </tr>
+            <tr>
+                <td>nextDouble()</td>
+                <td>读取浮点数（double类型）</td>
+                <td>获取小数、价格等浮点数据</td>
+            </tr>
+            <tr>
+                <td>next()</td>
+                <td>读取字符串（遇空格/回车停止）</td>
+                <td>获取单个单词（无空格的字符串）</td>
+            </tr>
+            <tr>
+                <td>nextLine()</td>
+                <td>读取整行字符串（遇回车停止）</td>
+                <td>获取带空格的完整内容（如姓名、地址）</td>
+            </tr>
+            <tr>
+                <td>nextChar()</td>
+                <td>无直接方法，需用next().charAt(0)</td>
+                <td>获取单个字符</td>
+            </tr>
+        </table>
+
+        <h3>3. 实战示例（读取多种数据）</h3>
+        <pre><code class="language-java">import java.util.Scanner; // 必须导入Scanner包
+
+public class ConsoleInput {
+    public static void main(String[] args) {
+        // 1. 创建Scanner对象，绑定键盘输入
+        Scanner sc = new Scanner(System.in);
+        
+        // 2. 读取数据（提示用户输入，体验更好）
+        System.out.print("请输入姓名：");
+        String name = sc.nextLine(); // 读整行字符串（支持空格）
+        
+        System.out.print("请输入年龄：");
+        int age = sc.nextInt(); // 读整数
+        
+        System.out.print("请输入体重（kg）：");
+        double weight = sc.nextDouble(); // 读浮点数
+        
+        System.out.print("请输入性别（男/女）：");
+        char gender = sc.next().charAt(0); // 读单个字符
+        
+        // 3. 打印读取到的数据
+        System.out.println("\n===== 输入结果 =====");
+        System.out.printf("姓名：%s，年龄：%d，体重：%.1fkg，性别：%c\n", 
+                         name, age, weight, gender);
+        
+        // 4. 关闭Scanner，释放资源
+        sc.close();
+    }
+}</code></pre>
+
+        <h3>4. 常见问题与避坑</h3>
+        <ul>
+            <li>输入类型不匹配报错：如用nextInt()读取字母，会抛出InputMismatchException，需确保输入类型与方法对应。</li>
+            <li>next()与nextLine()冲突：nextInt()/nextDouble()后直接用nextLine()，会读取到空字符串（因残留回车），解决方案：中间加一次sc.nextLine()吸收回车。</li>
+            <li>Scanner关闭后不可复用：同一程序中，sc.close()后再创建新Scanner可能报错，建议一个程序只创建1个Scanner对象。</li>
+        </ul>
+        <pre><code class="language-java">import java.util.Scanner;
+
+public class InputFix {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.print("请输入年龄：");
+        int age = sc.nextInt();
+        sc.nextLine(); // 吸收nextInt()残留的回车，避免后续nextLine()读空
+        
+        System.out.print("请输入地址：");
+        String addr = sc.nextLine(); // 正常读取带空格的地址
+        
+        System.out.println("年龄：" + age + "，地址：" + addr);
+        sc.close();
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>三、基础文件IO（数据持久化入门）</h2>
+        <p>将数据写入文件（输出）或从文件读取数据（输入），入门阶段用字符流（<code>FileWriter</code>、<code>FileReader</code>），适合处理文本文件（.txt等），需处理IO异常（用try-catch捕获）。</p>
+
+        <h3>1. 文件写入（程序→文件）</h3>
+        <p>用<code>FileWriter</code>类，核心步骤：创建FileWriter对象→写入数据→关闭资源（或flush刷新缓存）。</p>
+        <pre><code class="language-java">import java.io.FileWriter;
+import java.io.IOException; // 导入IO异常类
+
+public class FileWrite {
+    public static void main(String[] args) {
+        // 1. 声明FileWriter对象（try外部声明，方便关闭）
+        FileWriter fw = null;
+        try {
+            // 2. 创建对象：参数为文件路径（相对路径/绝对路径）
+            // 相对路径：文件在项目根目录下；绝对路径：完整路径（如D:/test.txt）
+            fw = new FileWriter("test.txt");
+            
+            // 3. 写入数据（3种常用方式）
+            fw.write("Hello File IO\n"); // 写入字符串，\n换行
+            fw.write("Java文件写入示例");
+            fw.write('\n'); // 写入单个字符
+            
+            // 4. 刷新缓存（写入后必须flush，否则数据可能残留缓存）
+            fw.flush();
+            System.out.println("文件写入成功！");
+        } catch (IOException e) {
+            // 5. 捕获IO异常（文件路径错误、权限不足等会触发）
+            e.printStackTrace();
+        } finally {
+            // 6. 关闭资源（finally确保无论是否异常都关闭）
+            if (fw != null) { // 避免空指针异常
+                try {
+                    fw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}</code></pre>
+
+        <h3>2. 文件读取（文件→程序）</h3>
+        <p>用<code>FileReader</code>类，核心步骤：创建FileReader对象→读取数据→关闭资源，常用字符数组批量读取（效率更高）。</p>
+        <pre><code class="language-java">import java.io.FileReader;
+import java.io.IOException;
+
+public class FileRead {
+    public static void main(String[] args) {
+        FileReader fr = null;
+        try {
+            // 1. 创建FileReader对象，指定要读取的文件路径
+            fr = new FileReader("test.txt");
+            
+            // 2. 读取数据：创建字符数组（批量读取，大小自定义，如1024）
+            char[] buf = new char[1024];
+            int len; // 存储每次读取的字符个数（-1表示读取结束）
+            
+            // 3. 循环读取：read(buf)返回读取到的字符数，存入buf数组
+            while ((len = fr.read(buf)) != -1) {
+                // 4. 转换为字符串打印（从0到len，避免读取到垃圾值）
+                System.out.print(new String(buf, 0, len));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // 关闭资源
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}</code></pre>
+
+        <h3>3. 简化写法：try-with-resources（自动关闭资源）</h3>
+        <p>Java 7+支持，将资源对象放在try括号内，程序结束后自动关闭资源，无需手动写finally，代码更简洁。</p>
+        <pre><code class="language-java">import java.io.FileWriter;
+import java.io.IOException;
+
+public class TryWithResources {
+    public static void main(String[] args) {
+        // 资源放在try括号内，自动关闭，无需finally
+        try (FileWriter fw = new FileWriter("test2.txt")) {
+            fw.write("try-with-resources简化写法");
+            fw.flush();
+            System.out.println("简化写法写入成功！");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+
+        <h3>4. 文件路径说明</h3>
+        <ul>
+            <li>相对路径：基于项目根目录，如<code>"test.txt"</code>（文件在项目根目录）、<code>"src/info.txt"</code>（文件在src文件夹下）。</li>
+            <li>绝对路径：完整文件路径，Windows系统用<code>"D:/文件/xxx.txt"</code>（斜杠/或双反斜杠\\），Linux/Mac用<code>"/Users/xxx/xxx.txt"</code>。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>四、IO使用最佳实践</h2>
+        <ul>
+            <li>控制台调试优先用<code>System.out.println()</code>，精准格式化用printf。</li>
+            <li>读取带空格的字符串必须用<code>nextLine()</code>，注意与nextInt()等方法的回车冲突问题。</li>
+            <li>文件IO必须处理<code>IOException</code>，优先用try-with-resources自动关闭资源（避免资源泄漏）。</li>
+            <li>文件写入后必须调用<code>flush()</code>，确保数据写入文件（缓存数据不刷新可能丢失）。</li>
+            <li>路径优先用相对路径（项目移植性更强），绝对路径需适配不同操作系统。</li>
+        </ul>
+    </section>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

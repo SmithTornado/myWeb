@@ -1,0 +1,5 @@
+@media screen and (max-width: 1500px) {
+	.header-content .slogan {
+		display: none;
+	}
+}

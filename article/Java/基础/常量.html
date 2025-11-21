@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java常量</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Java常量</h1>
+    <p>常量是Java中<span style="color:#f56c6c">编译后值固定不变</span>的量，一旦初始化赋值，程序运行全程无法修改，常用于存储固定配置、常量值等，可提升代码可读性与安全性。</p>
+
+    <section>
+        <h2>一、常量的分类</h2>
+        <p>Java常量按定义方式分为「字面常量」和「自定义常量」，前者是Java内置固定值，后者需通过关键字手动定义。</p>
+
+        <h3>1. 字面常量（内置固定值）</h3>
+        <p>直接书写使用的固定值，无需手动定义，常见6类：</p>
+        <pre><code class="language-javapublic class LiteralConstant {
+    public static void main(String[] args) {
+        // 1. 整数常量：正负整数、0（支持十进制/八进制/十六进制）
+        System.out.println(100);    // 十进制（常用）
+        System.out.println(0123);   // 八进制（以0开头，对应十进制83）
+        System.out.println(0x1A);   // 十六进制（以0x开头，对应十进制26）
+        
+        // 2. 浮点数常量：小数（支持小数形式/科学计数法）
+        System.out.println(3.14);   // 小数形式
+        System.out.println(1.23e4); // 科学计数法（对应12300.0）
+        
+        // 3. 字符常量：单引号包裹，仅1个字符（支持普通字符/转义字符）
+        System.out.println('A');    // 普通字符
+        System.out.println('\n');   // 转义字符（换行）
+        System.out.println('\\');   // 转义字符（反斜杠本身）
+        
+        // 4. 字符串常量：双引号包裹，可含多个字符（空字符串合法）
+        System.out.println("Java常量");
+        System.out.println("");     // 空字符串
+        
+        // 5. 布尔常量：仅2个值，true（真）/false（假）
+        System.out.println(true);
+        System.out.println(false);
+        
+        // 6. 空常量：仅1个值null，代表引用类型变量无指向（不能直接打印）
+        String str = null;
+        System.out.println(str);    // 运行无语法错，输出null（实际开发尽量避免直接使用）
+    }
+}</code></pre>
+
+        <h3>2. 自定义常量（手动定义固定值）</h3>
+        <p>需通过 <code>final</code> 关键字定义（核心关键字），根据作用范围可分为「成员常量」和「静态常量」，必须初始化后才能使用。</p>
+    </section>
+
+    <section>
+        <h2>二、自定义常量的定义方式</h2>
+        <h3>1. 局部常量（方法内定义，仅方法内可用）</h3>
+        <p>在方法、循环等局部代码块中定义，作用范围仅限当前局部区域，语法：<code>final 数据类型 常量名 = 初始化值;</code></p>
+        <pre><code class="language-java">public class LocalConstant {
+    public static void main(String[] args) {
+        // 定义局部常量：初始化后无法修改
+        final int MAX_SCORE = 100;
+        final String USER_NAME = "admin";
+        
+        // 错误：局部常量初始化后修改，编译报错
+        // MAX_SCORE = 90;
+        
+        System.out.println("满分：" + MAX_SCORE);
+        System.out.println("默认用户名：" + USER_NAME);
+    }
+}</code></pre>
+
+        <h3>2. 成员常量（类内方法外定义，对象级可用）</h3>
+        <p>在类中、方法外定义，需通过「对象调用」，语法：<code>final 数据类型 常量名 = 初始化值;</code>（可在定义时初始化/构造方法中初始化）</p>
+        <pre><code class="language-java">public class MemberConstant {
+    // 方式1：定义时直接初始化成员常量
+    final String COUNTRY = "中国";
+    // 方式2：定义时不初始化，必须在构造方法中完成初始化（否则编译报错）
+    final int AGE;
+    
+    // 构造方法（初始化未赋值的成员常量）
+    public MemberConstant(int age) {
+        this.AGE = age;
+    }
+    
+    public static void main(String[] args) {
+        // 成员常量需通过对象调用
+        MemberConstant obj = new MemberConstant(20);
+        System.out.println("国家：" + obj.COUNTRY);
+        System.out.println("年龄：" + obj.AGE);
+        
+        // 错误：成员常量无法修改，编译报错
+        // obj.COUNTRY = "美国";
+    }
+}</code></pre>
+
+        <h3>3. 静态常量（类内方法外定义，类级可用，最常用）</h3>
+        <p>通过 <code>static final</code> 组合定义（静态+固定），属于类本身，无需创建对象，直接通过「类名调用」，语法：<code>static final 数据类型 常量名 = 初始化值;</code></p>
+        <p>开发最佳实践：静态常量是最常用的自定义常量，用于存储全局固定配置（如接口地址、固定阈值）。</p>
+        <pre><code class="language-java">public class StaticConstant {
+    // 静态常量：static final组合，定义时必须初始化（类加载时生效）
+    public static final double PI = 3.1415926; // 圆周率（全局通用）
+    public static final int PAGE_SIZE = 10;    // 分页每页条数（全局配置）
+    
+    public static void main(String[] args) {
+        // 静态常量直接通过「类名.常量名」调用（推荐）
+        System.out.println("圆周率：" + StaticConstant.PI);
+        System.out.println("每页条数：" + StaticConstant.PAGE_SIZE);
+        
+        // 也可通过对象调用（不推荐，违反设计规范）
+        StaticConstant obj = new StaticConstant();
+        System.out.println(obj.PI);
+        
+        // 错误：静态常量无法修改，编译报错
+        // StaticConstant.PI = 3.14;
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>三、引用类型常量的注意点</h2>
+        <p><code>final</code> 修饰引用类型常量时，「常量的引用地址固定不变」，但「引用对象的内部属性可修改」（核心误区）。</p>
+        <pre><code class="language-java">class Student {
+    String name;
+    int age;
+    
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+public class ReferenceConstant {
+    public static void main(String[] args) {
+        // final修饰引用类型常量：student引用地址固定
+        final Student student = new Student("张三", 18);
+        
+        // 1. 正确：修改对象内部属性（引用地址未变）
+        student.age = 19;
+        student.name = "李四";
+        System.out.println(student.name + "，" + student.age); // 输出：李四，19
+        
+        // 2. 错误：修改引用地址（重新指向新对象），编译报错
+        // student = new Student("王五", 20);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>四、常量使用规范（最佳实践）</h2>
+        <ul>
+            <li>命名规范：自定义常量名「全大写，多单词用下划线分隔」（如 MAX_NUM、USER_PASSWORD），字面常量按默认习惯使用即可。</li>
+            <li>初始化要求：<code>final</code> 修饰的常量必须初始化（局部常量定义时初始化；成员常量定义时/构造方法中初始化；静态常量定义时初始化），否则编译报错。</li>
+            <li>作用范围：全局通用常量优先定义为「static final 静态常量」（类级调用，无需创建对象，效率更高）；仅方法内使用的固定值定义为局部常量。</li>
+            <li>不可修改性：常量初始化后，基本类型值不可变，引用类型地址不可变（对象内容可变），避免误修改导致程序逻辑异常。</li>
+        </ul>
+    </section>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

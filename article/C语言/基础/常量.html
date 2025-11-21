@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言常量</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言常量</h1>
+    <p>常量是程序运行过程中值不能改变的量。C语言中常量主要分为以下几类：</p>
+
+    <h2>1. 整数常量</h2>
+    <p>整数常量是没有小数部分的数值，可表示为十进制、八进制（以0开头）、十六进制（以0x或0X开头）。</p>
+    <pre><code>#include <stdio.h>
+
+int main() {
+    // 十进制整数（默认）
+    printf("%d\n", 123);   // 输出：123
+    
+    // 八进制整数（以0开头）
+    printf("%o\n", 0123);  // 输出八进制123对应的十进制：83（%o以八进制输出）
+    printf("%d\n", 0123);  // 输出：83
+    
+    // 十六进制整数（以0x或0X开头）
+    printf("%x\n", 0x1a);  // 输出十六进制1a对应的十进制：26（%x以十六进制小写输出）
+    printf("%d\n", 0X1A);  // 输出：26
+    return 0;
+}</code></pre>
+
+    <h2>2. 浮点常量</h2>
+    <p>浮点常量包含小数部分，有两种表示形式：小数形式和指数形式（科学计数法）。</p>
+    <pre><code>#include <stdio.h>
+
+int main() {
+    // 小数形式
+    printf("%f\n", 3.14);    // 输出：3.140000
+    
+    // 指数形式（e/E表示10的幂）
+    printf("%f\n", 3.14e2);  // 3.14 × 10² = 314.000000
+    printf("%f\n", 1.23E-3); // 1.23 × 10⁻³ = 0.001230
+    return 0;
+}</code></pre>
+
+    <h2>3. 字符常量</h2>
+    <p>字符常量用单引号('')括起来的单个字符，包括可打印字符和转义字符（如换行'\n'、制表符'\t'等）。</p>
+    <pre><code>#include <stdio.h>
+
+int main() {
+    // 可打印字符
+    printf("%c\n", 'A');    // 输出：A
+    
+    // 转义字符
+    printf("Hello\tWorld\n"); // \t是制表符，\n是换行符，输出：Hello    World（中间有制表位）
+    printf("%d\n", '\n');   // 转义字符的ASCII值，换行符ASCII值为10，输出：10
+    return 0;
+}</code></pre>
+
+    <h2>4. 字符串常量</h2>
+    <p>字符串常量用双引号("")括起来的字符序列，末尾会自动添加'\0'作为结束标志。</p>
+    <pre><code>#include <stdio.h>
+
+int main() {
+    // 字符串常量
+    printf("%s\n", "Hello");  // 输出：Hello
+    
+    // 字符串长度（不包含末尾的'\0'）
+    // "abc" 包含 'a','b','c','\0' 共4个字符，但长度为3
+    printf("%zu\n", sizeof("abc")); // 输出：4（包含'\0'）
+    return 0;
+}</code></pre>
+
+    <h2>5. 枚举常量</h2>
+    <p>通过enum关键字定义的常量，默认从0开始递增，也可手动指定值。</p>
+    <pre><code>#include <stdio.h>
+
+// 定义枚举类型
+enum Weekday {
+    MON,    // 默认为0
+    TUE,    // 默认为1
+    WED=5,  // 手动指定为5
+    THU     // 自动为6
+};
+
+int main() {
+    printf("%d\n", MON);   // 输出：0
+    printf("%d\n", TUE);   // 输出：1
+    printf("%d\n", WED);   // 输出：5
+    printf("%d\n", THU);   // 输出：6
+    return 0;
+}</code></pre>
+
+    <h2>6. 宏常量（#define定义）</h2>
+    <p>使用#define预处理指令定义的常量，在预处理阶段会被替换为对应的值。</p>
+    <pre><code>#include <stdio.h>
+
+// 定义宏常量
+#define PI 3.14159
+#define MAX_NUM 100
+
+int main() {
+    printf("圆周率：%f\n", PI);      // 输出：3.141590
+    printf("最大值：%d\n", MAX_NUM); // 输出：100
+    return 0;
+}</code></pre>
+</body>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</html>

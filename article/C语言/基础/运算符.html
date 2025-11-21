@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言运算符</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言运算符</h1>
+    <p>运算符是C语言中用于执行运算、处理数据关系或逻辑判断的符号，通过运算符与操作数组合形成表达式，实现数据计算与逻辑处理。C语言运算符按功能可分为多类，核心需掌握各类运算符的用法、优先级及使用注意事项。</p>
+
+    <h2>一、算术运算符</h2>
+    <p>用于执行基本数学运算，包含加减乘除及取余，均为双目运算符（需两个操作数），优先级：<code>*、/、%</code> 高于 <code>+、-</code>。</p>
+    <ul>
+        <li><code>+</code>：加法运算，如 <code>a + b</code></li>
+        <li><code>-</code>：减法运算，如 <code>a - b</code></li>
+        <li><code>*</code>：乘法运算，如 <code>a * b</code></li>
+        <li><code>/</code>：除法运算，整数相除结果取整，浮点数相除保留小数</li>
+        <li><code>%</code>：取余运算，仅支持整数，结果符号与左操作数一致</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 10, b = 3;
+    printf("加法：%d\n", a + b);   // 输出13
+    printf("减法：%d\n", a - b);   // 输出7
+    printf("乘法：%d\n", a * b);   // 输出30
+    printf("整数除法：%d\n", a / b); // 输出3（取整）
+    printf("浮点数除法：%f\n", (float)a / b); // 输出3.333333（强制类型转换）
+    printf("取余：%d\n", a % b);   // 输出1
+    printf("负号取余：%d\n", -a % b); // 输出-1
+    return 0;
+}</code></pre>
+
+    <h2>二、自增自减运算符</h2>
+    <p>用于快速增减变量值，均为单目运算符（仅需一个操作数），优先级高，分前置和后置两种形式。</p>
+    <ul>
+        <li><code>++a</code>：前置自增，先将a值+1，再使用a的新值</li>
+        <li><code>a++</code>：后置自增，先使用a的原值，再将a值+1</li>
+        <li><code>--a</code>：前置自减，先将a值-1，再使用a的新值</li>
+        <li><code>a--</code>：后置自减，先使用a的原值，再将a值-1</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 5, b = 5;
+    printf("前置自增：%d\n", ++a); // a先变6，输出6
+    printf("自增后a：%d\n", a);    // 输出6
+    printf("后置自增：%d\n", b++); // 先输出5，b再变6
+    printf("自增后b：%d\n", b);    // 输出6
+
+    int c = 3, d = 3;
+    printf("前置自减：%d\n", --c); // c先变2，输出2
+    printf("后置自减：%d\n", d--); // 先输出3，d再变2
+    return 0;
+}</code></pre>
+
+    <h2>三、赋值运算符</h2>
+    <p>用于给变量赋值，包含基本赋值和复合赋值，优先级最低，均为双目运算符。</p>
+    <ul>
+        <li><code>=</code>：基本赋值，将右操作数的值赋给左操作数，如 <code>a = b</code></li>
+        <li><code>+=</code>：加法赋值，<code>a += b</code> 等同于 <code>a = a + b</code></li>
+        <li><code>-=</code>：减法赋值，<code>a -= b</code> 等同于 <code>a = a - b</code></li>
+        <li><code>*=</code>：乘法赋值，<code>a *= b</code> 等同于 <code>a = a * b</code></li>
+        <li><code>/=</code>：除法赋值，<code>a /= b</code> 等同于 <code>a = a / b</code></li>
+        <li><code>%=</code>：取余赋值，<code>a %= b</code> 等同于 <code>a = a % b</code></li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 10;
+    a = 5; // 基本赋值，a=5
+    printf("基本赋值：%d\n", a);
+    
+    a += 3; // 等同于a = a+3，a=8
+    printf("加法赋值：%d\n", a);
+    
+    a -= 2; // 等同于a = a-2，a=6
+    printf("减法赋值：%d\n", a);
+    
+    a *= 4; // 等同于a = a*4，a=24
+    printf("乘法赋值：%d\n", a);
+    
+    a /= 3; // 等同于a = a/3，a=8
+    printf("除法赋值：%d\n", a);
+    
+    a %= 5; // 等同于a = a%5，a=3
+    printf("取余赋值：%d\n", a);
+    return 0;
+}</code></pre>
+
+    <h2>四、关系运算符</h2>
+    <p>用于判断两个操作数的大小关系，结果为布尔值（1表示真，0表示假），均为双目运算符，优先级相同。</p>
+    <ul>
+        <li><code>==</code>：判断是否相等，如 <code>a == b</code></li>
+        <li><code>!=</code>：判断是否不相等，如 <code>a != b</code></li>
+        <li><code>></code>：判断左操作数是否大于右操作数，如 <code>a > b</code></li>
+        <li><code><</code>：判断左操作数是否小于右操作数，如 <code>a < b</code></li>
+        <li><code>>=</code>：判断左操作数是否大于等于右操作数，如 <code>a >= b</code></li>
+        <li><code><=</code>：判断左操作数是否小于等于右操作数，如 <code>a <= b</code></li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 8, b = 5;
+    printf("a == b：%d\n", a == b); // 0（假）
+    printf("a != b：%d\n", a != b); // 1（真）
+    printf("a > b：%d\n", a > b);   // 1（真）
+    printf("a < b：%d\n", a < b);   // 0（假）
+    printf("a >= b：%d\n", a >= b); // 1（真）
+    printf("a <= b：%d\n", a <= b); // 0（假）
+
+    // 注意：不可写a < b < 10，需用逻辑运算符拼接
+    printf("5 < b < 10：%d\n", b > 5 && b < 10); // 0（假）
+    return 0;
+}</code></pre>
+
+    <h2>五、逻辑运算符</h2>
+    <p>用于逻辑判断，操作数为布尔值，结果也为布尔值，包含逻辑与、或、非，优先级：<code>!</code> > <code>&&</code> > <code>||</code>。</p>
+    <ul>
+        <li><code>&&</code>：逻辑与，左右均为真则结果为真，存在短路特性（左为假时右操作数不执行）</li>
+        <li><code>||</code>：逻辑或，左右任一为真则结果为真，存在短路特性（左为真时右操作数不执行）</li>
+        <li><code>!</code>：逻辑非，单目运算符，真变假、假变真</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 1, b = 0, c = 5;
+    printf("a && b：%d\n", a && b); // 0（假）
+    printf("a || b：%d\n", a || b); // 1（真）
+    printf("!a：%d\n", !a);         // 0（假）
+    printf("!b：%d\n", !b);         // 1（真）
+
+    // 短路特性演示
+    a && (c++); // 左为真，执行c++，c=6
+    printf("短路与后c：%d\n", c);
+    b || (c++); // 左为假，执行c++，c=7
+    printf("短路或后c：%d\n", c);
+    b && (c++); // 左为假，不执行c++，c仍为7
+    printf("短路与不执行后c：%d\n", c);
+    return 0;
+}</code></pre>
+
+    <h2>六、位运算符</h2>
+    <p>直接对二进制位进行操作，仅支持整数类型，均为双目运算符（<code>~</code> 为单目）。</p>
+    <ul>
+        <li><code>&</code>：按位与，对应位均为1则为1，否则为0</li>
+        <li><code>|</code>：按位或，对应位任一为1则为1，否则为0</li>
+        <li><code>^</code>：按位异或，对应位不同则为1，相同则为0</li>
+        <li><code>~</code>：按位取反，0变1、1变0</li>
+        <li><code><<</code>：左移，二进制位左移n位，右边补0，等价于乘2ⁿ</li>
+        <li><code>>></code>：右移，二进制位右移n位，无符号数左边补0，有符号数补符号位</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 6;  // 二进制：00000110
+    int b = 3;  // 二进制：00000011
+    printf("a & b：%d\n", a & b); // 00000010 → 2
+    printf("a | b：%d\n", a | b); // 00000111 → 7
+    printf("a ^ b：%d\n", a ^ b); // 00000101 → 5
+    printf("~a：%d\n", ~a);       // 按位取反 → -7
+    printf("a << 2：%d\n", a << 2); // 左移2位 → 24（6×4）
+    printf("a >> 1：%d\n", a >> 1); // 右移1位 → 3（6÷2）
+    return 0;
+}</code></pre>
+
+    <h2>七、条件运算符</h2>
+    <p>C语言唯一的三目运算符，格式：<code>表达式1 ? 表达式2 : 表达式3</code>，优先级较高，用于简化条件判断。</p>
+    <p>执行逻辑：若表达式1为真，结果取表达式2的值；若为假，结果取表达式3的值。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 10, b = 20;
+    // 求a和b的最大值
+    int max = a > b ? a : b;
+    printf("最大值：%d\n", max); // 输出20
+
+    // 判断奇偶性
+    int num = 7;
+    num % 2 == 0 ? printf("偶数\n") : printf("奇数\n"); // 输出奇数
+    return 0;
+}</code></pre>
+
+    <h2>八、sizeof运算符</h2>
+    <p>单目运算符，用于获取变量或数据类型占用的内存大小，单位为字节，优先级低。</p>
+    <p>格式：<code>sizeof(变量/类型)</code>，变量名可省略括号。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    printf("int占用字节：%zu\n", sizeof(int));
+    printf("float占用字节：%zu\n", sizeof(float));
+    printf("char占用字节：%zu\n", sizeof(char));
+    printf("double占用字节：%zu\n", sizeof(double));
+
+    int a = 10;
+    printf("变量a占用字节：%zu\n", sizeof a); // 变量可省略括号
+    return 0;
+}</code></pre>
+
+    <h2>九、常用运算符优先级（从高到低）</h2>
+    <p>多运算符组合成复合表达式时，按优先级执行，优先级相同则按结合性（左到右/右到左）执行，复杂表达式建议用括号明确逻辑。</p>
+    <ol>
+        <li>括号：<code>()</code></li>
+        <li>单目运算符：<code>++、--、!、~、sizeof、(类型)（强制转换）</code></li>
+        <li>算术运算符：<code>*、/、%</code></li>
+        <li>算术运算符：<code>+、-</code></li>
+        <li>位运算符：<code><<、>>></code></li>
+        <li>关系运算符：<code><、>、<=、>=</code></li>
+        <li>关系运算符：<code>==、!=</code></li>
+        <li>位运算符：<code>&</code></li>
+        <li>位运算符：<code>^</code></li>
+        <li>位运算符：<code>|</code></li>
+        <li>逻辑运算符：<code>&&</code></li>
+        <li>逻辑运算符：<code>||</code></li>
+        <li>三目运算符：<code>?:</code></li>
+        <li>赋值运算符：<code>=、+=、-=、*=、/=、%=、<<=、>>=、&=、^=、|=</code></li>
+        <li>逗号运算符：<code>,</code></li>
+    </ol>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 2, b = 3, c = 4;
+    // 按优先级计算：先*，再+，最后=
+    int res1 = a + b * c;
+    printf("res1：%d\n", res1); // 2+12=14
+
+    // 括号改变优先级：先+，再*
+    int res2 = (a + b) * c;
+    printf("res2：%d\n", res2); // 5*4=20
+
+    // 优先级：> 高于 &&，&& 高于 =
+    int res3 = a > b && b < c;
+    printf("res3：%d\n", res3); // 0 && 1=0
+    return 0;
+}</code></pre>
+</body>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</html>
+
+<data-inline-no-margin type="video-group" value_id="30194305662769154_null_0_44255_102_0" alt="" extra="{&quot;video_title_show&quot;:true}"></data-inline-no-margin>

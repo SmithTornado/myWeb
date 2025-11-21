@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java顺序结构</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Java顺序结构</h1>
+    <p>顺序结构是Java程序中<span style="color:#f56c6c">最基础、最核心的流程控制结构</span>，核心逻辑是代码按「自上而下、从左到右」的顺序依次执行，无跳转、无分支、无循环，所有代码都会被执行且仅执行一次，是任何复杂程序的基础组成单元。</p>
+
+    <section>
+        <h2>一、顺序结构核心概念</h2>
+        <p>顺序结构如同“流水线作业”，程序从main方法第一行代码开始，逐行执行每一条语句，直到main方法结束，中间不会跳过任何一条有效代码，也不会重复执行某段代码。</p>
+        <ul>
+            <li>执行规则：自上而下，逐条执行，顺序不可随意打乱（打乱可能导致逻辑错误或语法报错）。</li>
+            <li>结构特点：无任何流程控制关键字（如if、for），代码线性排列，逻辑简单直观。</li>
+            <li>适用场景：简单数据处理（变量定义、运算、赋值）、基础输入输出、单一逻辑执行等。</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>二、顺序结构语法格式</h2>
+        <p>顺序结构无特殊语法，仅需按逻辑需求将代码逐行编写，每条语句以分号<code>;</code>结尾，代码块按功能有序排列即可。</p>
+        <pre><code class="language-java">public class 类名 {
+    public static void main(String[] args) {
+        // 语句1：变量定义、赋值等
+        // 语句2：数据运算、方法调用等
+        // 语句3：输出、结果展示等
+        // ... 后续语句按逻辑顺序编写，逐行执行
+    }
+}</code></pre>
+</section>
+
+    <section>
+        <h2>三、实战示例（基础+综合）</h2>
+        <h3>1. 基础示例：变量运算与输出</h3>
+        <p>实现“定义变量→执行运算→打印结果”的简单流程，代码逐行执行，步骤清晰。</p>
+        <pre><code class="language-java">public class SequentialBasic {
+    public static void main(String[] args) {
+        // 步骤1：定义并初始化变量（第1行执行）
+        int num1 = 15;
+        int num2 = 8;
+        
+        // 步骤2：执行算术运算（第2、3行依次执行）
+        int sum = num1 + num2;    // 求和
+        int diff = num1 - num2;   // 求差
+        int product = num1 * num2;// 求积
+        double quotient = (double)num1 / num2; // 求商（转浮点数保留小数）
+        
+        // 步骤3：打印运算结果（第4-7行依次执行）
+        System.out.println("两数之和：" + sum);
+        System.out.println("两数之差：" + diff);
+        System.out.println("两数之积：" + product);
+        System.out.println("两数之商：" + quotient);
+    }
+}</code></pre>
+        <p><strong>执行流程</strong>：先定义4个变量→依次计算和、差、积、商→逐行打印4个结果，最终输出所有运算结果，无代码跳过或重复。</p>
+
+        <h3>2. 综合示例：输入-处理-输出完整流程</h3>
+        <p>结合控制台输入输出，实现“读取用户数据→数据处理→打印结果”，全流程按顺序执行，贴近实际简单需求。</p>
+        <pre><code class="language-java">import java.util.Scanner;
+
+public class SequentialComprehensive {
+    public static void main(String[] args) {
+        // 步骤1：创建Scanner对象，准备读取输入（第1行执行）
+        Scanner sc = new Scanner(System.in);
+        
+        // 步骤2：提示用户输入数据并读取（第2-5行依次执行）
+        System.out.print("请输入长方形的长：");
+        double length = sc.nextDouble();
+        System.out.print("请输入长方形的宽：");
+        double width = sc.nextDouble();
+        
+        // 步骤3：计算长方形的周长和面积（第6-7行依次执行）
+        double perimeter = 2 * (length + width); // 周长公式
+        double area = length * width;            // 面积公式
+        
+        // 步骤4：格式化打印结果（第8-9行依次执行）
+        System.out.printf("长方形周长：%.2f\n", perimeter);
+        System.out.printf("长方形面积：%.2f\n", area);
+        
+        // 步骤5：关闭Scanner，释放资源（最后执行）
+        sc.close();
+    }
+}</code></pre>
+        <p><strong>执行流程</strong>：创建输入对象→提示输入长并读取→提示输入宽并读取→计算周长和面积→打印结果→关闭资源，每一步按顺序执行，缺一步或顺序错乱都会导致功能异常。</p>
+    </section>
+
+    <section>
+        <h2>四、顺序结构注意事项（避坑关键）</h2>
+        <ul>
+            <li>代码顺序决定执行结果：变量必须先定义初始化，再使用（如先写int sum; 再写sum = num1+num2;，不可先赋值再定义）；依赖数据的运算，需先获取数据再执行运算。</li>
+            <li>语句必须加分号结尾：Java中每条执行语句需以<code>;</code>结束，缺失分号会导致编译报错，顺序执行中断。</li>
+            <li>变量作用域合规：局部变量仅在定义后的代码中可用，不可在定义前调用（如先打印sum，再定义sum，编译报错）。</li>
+            <li>无跳转语句干扰：顺序结构中不可出现break、continue、return等跳转语句（除main方法末尾的return），否则会破坏顺序执行逻辑。</li>
+        </ul>
+        <pre><code class="language-java">public class SequentialRule {
+    public static void main(String[] args) {
+        // 错误1：变量未定义先使用（编译报错）
+        // System.out.println(num);
+        int num = 10; // 正确：先定义再使用
+        System.out.println(num);
+        
+        // 错误2：语句缺失分号（编译报错）
+        // int a = 5
+        int a = 5; // 正确：加分号
+        
+        // 错误3：跳转语句破坏顺序（提前结束程序，后续代码不执行）
+        // return;
+        System.out.println("顺序执行的后续代码");
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>五、顺序结构的核心地位</h2>
+        <p>顺序结构是Java程序的基础骨架，无论多么复杂的程序（含分支、循环结构），其内部的每一段基础逻辑都是按顺序执行的。例如：</p>
+        <ul>
+            <li>if分支结构中，每个分支内部的代码按顺序执行；</li>
+            <li>for循环结构中，循环体内部的代码按顺序执行；</li>
+            <li>复杂项目的功能模块，核心数据处理逻辑仍依赖顺序结构实现。</li>
+        </ul>
+        <p>掌握顺序结构是学习分支、循环等复杂流程结构的前提，需熟练掌握变量定义、运算、输入输出的顺序编排逻辑。</p>
+    </section>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

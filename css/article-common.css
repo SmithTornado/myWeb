@@ -1,0 +1,30 @@
+.copy-btn {
+    background: #ff7d00; /* 主橙色 */
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    outline: none;    
+}
+
+.copy-btn:hover {
+    background: #e67200; /*  hover深一点 */
+    transform: translateY(-1px);    
+}
+
+pre code {
+    min-height: 80px;
+}
+
+pre .copy-btn {
+    opacity: 0;
+    visibility: hidden;
+}
+
+pre:hover .copy-btn {
+    opacity: 1;
+    visibility: visible;
+}

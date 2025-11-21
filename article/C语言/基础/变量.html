@@ -1,0 +1,134 @@
+*<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言变量</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言变量</h1>
+    <p>变量是程序运行过程中值可以改变的量，用于存储数据。C语言中变量需先定义后使用，以下是核心知识点：</p>
+
+    <h2>1. 变量的定义与初始化</h2>
+    <p>变量定义格式：<code>数据类型 变量名;</code>，可在定义时初始化（赋值）。</p>
+    <pre><code>#include <stdio.h>
+
+int main() {
+    // 仅定义变量（未初始化，值为随机值）
+    int age;
+    float weight;
+
+    // 定义时初始化（推荐）
+    int score = 90;
+    char grade = 'A';
+
+    // 定义后赋值
+    age = 20;
+    weight = 65.5f;  // 浮点型常量加f表示float，否则默认double
+
+    printf("年龄：%d，体重：%f\n", age, weight);  // 输出：年龄：20，体重：65.500000
+    return 0;
+}</code></pre>
+
+    <h2>2. 变量的命名规则</h2>
+    <p>需遵循：由字母、数字、下划线组成；不能以数字开头；区分大小写；不能使用关键字（如int、if等）。</p>
+    <pre><code>#include <stdio.h>
+
+int main() {
+    // 合法命名
+    int student_count;  // 下划线连接
+    int Age;            // 区分大小写（与age是不同变量）
+    int _temp;          // 下划线开头
+
+    // 非法命名（注释说明原因）
+    // int 2nd;        // 不能以数字开头
+    // int my-name;    // 不能包含减号
+    // int int;        // 不能使用关键字
+
+    student_count = 50;
+    Age = 18;
+    printf("学生数：%d，年龄：%d\n", student_count, Age);  // 输出：学生数：50，年龄：18
+    return 0;
+}</code></pre>
+
+    <h2>3. 基本数据类型</h2>
+    <p>常用基本类型：<code>int</code>（整数）、<code>float</code>（单精度浮点）、<code>double</code>（双精度浮点）、<code>char</code>（字符）。</p>
+    <pre><code>#include <stdio.h>
+
+int main() {
+    int a = 100;          // 整数，通常占4字节
+    float b = 3.14f;      // 单精度浮点，占4字节（精度约6-7位）
+    double c = 3.1415926; // 双精度浮点，占8字节（精度约15-17位）
+    char d = 'Z';         // 字符，占1字节（存储ASCII码）
+
+    // 用sizeof查看类型/变量占用字节数
+    printf("int大小：%zu字节\n", sizeof(int));    // 输出：int大小：4字节
+    printf("char值：%c（ASCII：%d）\n", d, d);    // 输出：char值：Z（ASCII：90）
+    return 0;
+}</code></pre>
+
+    <h2>4. 变量的赋值与运算</h2>
+    <p>变量可通过赋值语句更新值，支持算术运算（+、-、*、/等）和复合赋值（+=、-=等）。</p>
+    <pre><code>#include <stdio.h>
+
+int main() {
+    int x = 5, y = 3;
+    int result;
+
+    result = x + y;  // 赋值运算
+    printf("x+y：%d\n", result);  // 输出：8
+
+    x *= 2;  // 复合赋值（等价于x = x * 2）
+    printf("x*2后：%d\n", x);     // 输出：10
+
+    y++;  // 自增（等价于y = y + 1）
+    printf("y自增后：%d\n", y);   // 输出：4
+    return 0;
+}</code></pre>
+
+    <h2>5. 变量的作用域</h2>
+    <p>局部变量：在函数/代码块内定义，仅在该范围有效；全局变量：在函数外定义，整个文件有效。</p>
+    <pre><code>#include <stdio.h>
+
+// 全局变量（整个文件可见）
+int global_var = 100;
+
+void test() {
+    // 局部变量（仅在test函数内有效）
+    int local_var = 200;
+    printf("函数内访问全局变量：%d\n", global_var);  // 输出：100
+    printf("函数内访问局部变量：%d\n", local_var);   // 输出：200
+}
+
+int main() {
+    test();
+    printf("main函数访问全局变量：%d\n", global_var);  // 输出：100
+    // printf("%d\n", local_var);  // 错误：局部变量在main中不可见
+    return 0;
+}</code></pre>
+
+    <h2>6. 变量的生命周期</h2>
+    <p>局部变量：进入作用域时创建，离开时销毁；全局变量：程序启动时创建，结束时销毁。</p>
+    <pre><code>#include <stdio.h>
+
+void func() {
+    // 局部变量：每次调用func时重新创建
+    int temp = 0;
+    temp++;
+    printf("temp：%d\n", temp);  // 第一次调用输出1，第二次输出1（重新创建）
+}
+
+int main() {
+    func();  // 输出：temp：1
+    func();  // 输出：temp：1
+    return 0;
+}</code></pre>
+</body>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</html>

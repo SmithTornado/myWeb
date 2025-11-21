@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言预处理器</title>
+    <link rel="stylesheet" href="./../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="./../../css/common.css">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言预处理器</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../css/common.css">
+</head>
+<body>
+    <h1>C语言预处理器</h1>
+    <p>预处理器是在编译之前处理源代码的工具，它会根据以<code>#</code>开头的指令对代码进行文本替换和文件包含等操作。预处理器不是C语言的一部分，但它是编译过程中不可缺少的一环。</p>
+
+    <h2>1. 预处理器指令</h2>
+    <p>所有预处理器指令都以<code>#</code>开头，每条指令占据一行。常见的预处理器指令包括：</p>
+    <ul>
+        <li><code>#define</code>：定义宏</li>
+        <li><code>#include</code>：包含文件</li>
+        <li><code>#ifdef</code>、<code>#ifndef</code>、<code>#if</code>、<code>#else</code>、<code>#elif</code>、<code>#endif</code>：条件编译</li>
+        <li><code>#pragma</code>：编译器特定指令</li>
+        <li><code>#error</code>：在编译时产生错误信息</li>
+        <li><code>#line</code>：修改行号和文件名</li>
+        <li><code>#undef</code>：取消宏定义</li>
+    </ul>
+
+    <h2>2. #define指令</h2>
+    <p><code>#define</code>用于定义宏，包括对象宏和函数宏。</p>
+
+    <h3>对象宏</h3>
+    <p>对象宏用于定义常量：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define MAX 100
+#define PI 3.14159
+#define MSG "Hello, World!"
+
+int main() {
+    printf("MAX = %d\n", MAX);
+    printf("PI = %f\n", PI);
+    printf("MSG = %s\n", MSG);
+    return 0;
+}</code></pre>
+
+    <h3>函数宏</h3>
+    <p>函数宏用于定义类似函数的宏：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define SQUARE(x) ((x) * (x))
+
+int main() {
+    int a = 10, b = 20;
+    printf("MAX(%d, %d) = %d\n", a, b, MAX(a, b));
+    printf("SQUARE(%d) = %d\n", a, SQUARE(a));
+    return 0;
+}</code></pre>
+
+    <h2>3. #include指令</h2>
+    <p><code>#include</code>用于包含其他文件的内容：</p>
+    <pre><code class="language-c">// 包含系统头文件
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// 包含用户自定义头文件
+#include "myheader.h"</code></pre>
+
+    <h2>4. 条件编译</h2>
+    <p>条件编译指令允许根据条件包含或排除代码：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+#define DEBUG 1
+
+int main() {
+#if DEBUG
+    printf("Debug mode is on\n");
+#endif
+
+#ifdef DEBUG
+    printf("DEBUG is defined\n");
+#endif
+
+#ifndef DEBUG
+    printf("DEBUG is not defined\n");
+#else
+    printf("DEBUG is defined\n");
+#endif
+
+#if defined(DEBUG) && DEBUG > 0
+    printf("Debug level: %d\n", DEBUG);
+#endif
+
+    return 0;
+}</code></pre>
+
+    <h2>5. 预定义宏</h2>
+    <p>C语言提供了一些预定义的宏：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    printf("当前文件: %s\n", __FILE__);
+    printf("当前行号: %d\n", __LINE__);
+    printf("当前日期: %s\n", __DATE__);
+    printf("当前时间: %s\n", __TIME__);
+    printf("标准C: %d\n", __STDC__);
+    
+    return 0;
+}</code></pre>
+
+    <h2>6. #undef指令</h2>
+    <p><code>#undef</code>用于取消已定义的宏：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define MAX 100
+#undef MAX
+
+int main() {
+    // printf("%d\n", MAX); // 错误：MAX已被取消定义
+    return 0;
+}</code></pre>
+
+    <h2>7. #error和#line指令</h2>
+    <p><code>#error</code>用于在编译时产生错误信息，<code>#line</code>用于修改行号和文件名：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define VERSION 1
+
+#if VERSION < 2
+#error "Version must be 2 or higher"
+#endif
+
+#line 100 "custom_file.c"
+int main() {
+    printf("Line number: %d\n", __LINE__);
+    printf("File name: %s\n", __FILE__);
+    return 0;
+}</code></pre>
+
+    <h2>8. #pragma指令</h2>
+    <p><code>#pragma</code>用于向编译器发出特定指令：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#pragma pack(1)  // 设置结构体对齐为1字节
+struct Example {
+    char a;
+    int b;
+};
+
+#pragma pack()   // 恢复默认对齐
+
+int main() {
+    printf("Size of struct: %zu\n", sizeof(struct Example));
+    return 0;
+}</code></pre>
+
+    <h2>9. 宏定义注意事项</h2>
+    <ul>
+        <li>使用括号包围宏参数和整个宏体，避免运算符优先级问题</li>
+        <li>避免在宏中使用自增/自减运算符，可能导致多次计算</li>
+        <li>宏不进行类型检查，容易出错</li>
+        <li>宏在预处理阶段替换，不占用运行时间</li>
+    </ul>
+
+    <h2>10. 条件编译的实际应用</h2>
+    <p>条件编译常用于跨平台代码：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#ifdef _WIN32
+    #include &lt;windows.h&gt;
+    #define SLEEP(x) Sleep(x)
+#elif __linux__
+    #include &lt;unistd.h&gt;
+    #define SLEEP(x) sleep(x/1000)
+#endif
+
+int main() {
+    printf("Sleeping for 2 seconds...\n");
+    SLEEP(2000);
+    printf("Awake!\n");
+    return 0;
+}</code></pre>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>css/common.css">
+</head>
+<body>
+
+    <h1>C语言预处理器</h1>
+    
+    <p>预处理器是在编译之前处理源代码的工具，它会根据以<code>#</code>开头的指令对代码进行文本替换和文件包含等操作。预处理器不是C语言的一部分，但它是编译过程中不可缺少的一环。</p>
+
+    <h2>1. 预处理器指令</h2>
+    <p>所有预处理器指令都以<code>#</code>开头，每条指令占据一行。常见的预处理器指令包括：</p>
+    <ul>
+        <li><code>#define</code>：定义宏</li>
+        <li><code>#include</code>：包含文件</li>
+        <li><code>#ifdef</code>、<code>#ifndef</code>、<code>#if</code>、<code>#else</code>、<code>#elif</code>、<code>#endif</code>：条件编译</li>
+        <li><code>#pragma</code>：编译器特定指令</li>
+        <li><code>#error</code>：在编译时产生错误信息</li>
+        <li><code>#line</code>：修改行号和文件名</li>
+        <li><code>#undef</code>：取消宏定义</li>
+    </ul>
+
+    <h2>2. #define指令</h2>
+    <p><code>#define</code>用于定义宏，包括对象宏和函数宏。</p>
+
+    <h3>对象宏</h3>
+    <p>对象宏用于定义常量：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define MAX 100
+#define PI 3.14159
+#define MSG "Hello, World!"
+
+int main() {
+    printf("MAX = %d\n", MAX);
+    printf("PI = %f\n", PI);
+    printf("MSG = %s\n", MSG);
+    return 0;
+}</code></pre>
+
+    <h3>函数宏</h3>
+    <p>函数宏用于定义类似函数的宏：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define SQUARE(x) ((x) * (x))
+
+int main() {
+    int a = 10, b = 20;
+    printf("MAX(%d, %d) = %d\n", a, b, MAX(a, b));
+    printf("SQUARE(%d) = %d\n", a, SQUARE(a));
+    return 0;
+}</code></pre>
+
+    <h2>3. #include指令</h2>
+    <p><code>#include</code>用于包含其他文件的内容：</p>
+    <pre><code class="language-c">// 包含系统头文件
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// 包含用户自定义头文件
+#include "myheader.h"</code></pre>
+
+    <h2>4. 条件编译</h2>
+    <p>条件编译指令允许根据条件包含或排除代码：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+#define DEBUG 1
+
+int main() {
+#if DEBUG
+    printf("Debug mode is on\n");
+#endif
+
+#ifdef DEBUG
+    printf("DEBUG is defined\n");
+#endif
+
+#ifndef DEBUG
+    printf("DEBUG is not defined\n");
+#else
+    printf("DEBUG is defined\n");
+#endif
+
+#if defined(DEBUG) && DEBUG > 0
+    printf("Debug level: %d\n", DEBUG);
+#endif
+
+    return 0;
+}</code></pre>
+
+    <h2>5. 预定义宏</h2>
+    <p>C语言提供了一些预定义的宏：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    printf("当前文件: %s\n", __FILE__);
+    printf("当前行号: %d\n", __LINE__);
+    printf("当前日期: %s\n", __DATE__);
+    printf("当前时间: %s\n", __TIME__);
+    printf("标准C: %d\n", __STDC__);
+    
+    return 0;
+}</code></pre>
+
+    <h2>6. #undef指令</h2>
+    <p><code>#undef</code>用于取消已定义的宏：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define MAX 100
+#undef MAX
+
+int main() {
+    // printf("%d\n", MAX); // 错误：MAX已被取消定义
+    return 0;
+}</code></pre>
+
+    <h2>7. #error和#line指令</h2>
+    <p><code>#error</code>用于在编译时产生错误信息，<code>#line</code>用于修改行号和文件名：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define VERSION 1
+
+#if VERSION < 2
+#error "Version must be 2 or higher"
+#endif
+
+#line 100 "custom_file.c"
+int main() {
+    printf("Line number: %d\n", __LINE__);
+    printf("File name: %s\n", __FILE__);
+    return 0;
+}</code></pre>
+
+    <h2>8. #pragma指令</h2>
+    <p><code>#pragma</code>用于向编译器发出特定指令：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#pragma pack(1)  // 设置结构体对齐为1字节
+struct Example {
+    char a;
+    int b;
+};
+
+#pragma pack()   // 恢复默认对齐
+
+int main() {
+    printf("Size of struct: %zu\n", sizeof(struct Example));
+    return 0;
+}</code></pre>
+
+    <h2>9. 宏定义注意事项</h2>
+    <ul>
+        <li>使用括号包围宏参数和整个宏体，避免运算符优先级问题</li>
+        <li>避免在宏中使用自增/自减运算符，可能导致多次计算</li>
+        <li>宏不进行类型检查，容易出错</li>
+        <li>宏在预处理阶段替换，不占用运行时间</li>
+    </ul>
+
+    <h2>10. 条件编译的实际应用</h2>
+    <p>条件编译常用于跨平台代码：</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#ifdef _WIN32
+    #include &lt;windows.h&gt;
+    #define SLEEP(x) Sleep(x)
+#elif __linux__
+    #include &lt;unistd.h&gt;
+    #define SLEEP(x) sleep(x/1000)
+#endif
+
+int main() {
+    printf("Sleeping for 2 seconds...\n");
+    SLEEP(2000);
+    printf("Awake!\n");
+    return 0;
+}</code></pre>
+
+    <script type="text/javascript" src="./../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="./../../js/common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20);
+    </script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java运算符</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Java运算符</h1>
+    <p>运算符是Java中用于<span style="color:#f56c6c">对数据执行运算、逻辑判断或赋值操作</span>的符号，核心作用是实现数据处理、条件控制与结果计算，按功能可分为6大类，是程序逻辑实现的基础工具。</p>
+
+    <section>
+        <h2>一、运算符核心分类</h2>
+        <p>Java运算符按功能划分为6类，日常开发优先掌握前5类常用运算符，位运算符多用于底层场景，入门阶段了解基础用法即可：</p>
+        <ul>
+            <li>算术运算符：用于数值计算（加减乘除、自增自减等）</li>
+            <li>赋值运算符：用于变量赋值（基本赋值、复合赋值）</li>
+            <li>比较运算符：用于数据比较，结果为布尔值（true/false）</li>
+            <li>逻辑运算符：用于布尔值运算，结果为布尔值（短路/非短路）</li>
+            <li>三元运算符：三目运算，简化条件判断赋值</li>
+            <li>位运算符：对二进制位直接操作（底层开发常用）</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>二、算术运算符（数值计算核心）</h2>
+        <p>仅用于整数、浮点型等数值类型运算，核心分「基本算术运算」和「自增自减运算」，注意整数除法取整、模运算正负号规则。</p>
+
+        <h3>1. 基本算术运算符（6种）</h3>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>运算符</th>
+                <th>功能</th>
+                <th>示例</th>
+                <th>结果</th>
+            </tr>
+            <tr>
+                <td>+</td>
+                <td>加法（正数、字符串拼接）</td>
+                <td>3 + 5、"Hello" + "Java"</td>
+                <td>8、"HelloJava"</td>
+            </tr>
+            <tr>
+                <td>-</td>
+                <td>减法（负数）</td>
+                <td>10 - 4、-6 + 2</td>
+                <td>6、-4</td>
+            </tr>
+            <tr>
+                <td>*</td>
+                <td>乘法</td>
+                <td>4 * 6</td>
+                <td>24</td>
+            </tr>
+            <tr>
+                <td>/</td>
+                <td>除法（整数÷整数取整，浮点数正常除）</td>
+                <td>10 / 3、10.0 / 3</td>
+                <td>3、3.333...</td>
+            </tr>
+            <tr>
+                <td>%</td>
+                <td>模运算（取余数，符号与被除数一致）</td>
+                <td>10 % 3、-10 % 3</td>
+                <td>1、-1</td>
+            </tr>
+        </table>
+        <pre><code class="language-java">public class BasicArithmetic {
+    public static void main(String[] args) {
+        int a = 10, b = 3;
+        double c = 10.0, d = 3.0;
+        
+        // 加法与字符串拼接
+        System.out.println("加法：" + (a + b)); // 13
+        System.out.println("字符串拼接：" + "num=" + a); // num=10
+        
+        // 除法：整数取整，浮点数保留小数
+        System.out.println("整数除法：" + (a / b)); // 3（丢弃小数）
+        System.out.println("浮点数除法：" + (c / d)); // 3.3333333333333335
+        
+        // 模运算：符号跟随被除数
+        System.out.println("10%3：" + (a % b)); // 1
+        System.out.println("-10%3：" + (-a % b)); // -1
+    }
+}</code></pre>
+
+        <h3>2. 自增自减运算符（2种，高频易错）</h3>
+        <p>仅用于变量，实现变量值+1或-1，分「前置」和「后置」，核心区别：前置先运算再取值，后置先取值再运算。</p>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>运算符</th>
+                <th>位置</th>
+                <th>执行逻辑</th>
+                <th>示例</th>
+                <th>变量最终值</th>
+                <th>表达式结果</th>
+            </tr>
+            <tr>
+                <td>++</td>
+                <td>前置（++变量）</td>
+                <td>先变量+1，再使用变量值</td>
+                <td>int x=2; int y=++x;</td>
+                <td>x=3</td>
+                <td>y=3</td>
+            </tr>
+            <tr>
+                <td>++</td>
+                <td>后置（变量++）</td>
+                <td>先使用变量值，再变量+1</td>
+                <td>int x=2; int y=x++;</td>
+                <td>x=3</td>
+                <td>y=2</td>
+            </tr>
+            <tr>
+                <td>--</td>
+                <td>前置（--变量）</td>
+                <td>先变量-1，再使用变量值</td>
+                <td>int x=2; int y=--x;</td>
+                <td>x=1</td>
+                <td>y=1</td>
+            </tr>
+            <tr>
+                <td>--</td>
+                <td>后置（变量--）</td>
+                <td>先使用变量值，再变量-1</td>
+                <td>int x=2; int y=x--;</td>
+                <td>x=1</td>
+                <td>y=2</td>
+            </tr>
+        </table>
+        <pre><code class="language-java">public class IncDec {
+    public static void main(String[] args) {
+        // 前置自增
+        int x = 5;
+        int y = ++x;
+        System.out.println("前置++：x=" + x + "，y=" + y); // x=6，y=6
+        
+        // 后置自增
+        int m = 5;
+        int n = m++;
+        System.out.println("后置++：m=" + m + "，n=" + n); // m=6，n=5
+        
+        // 表达式中使用
+        int a = 3;
+        int b = a++ + ++a; // 第一步：a++取3，a变4；第二步：++a变5，取5；总和3+5=8
+        System.out.println("表达式结果：" + b + "，a最终值：" + a); // b=8，a=5
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>三、赋值运算符（变量赋值核心）</h2>
+        <p>用于给变量赋值，分「基本赋值」和「复合赋值」，复合赋值是基本赋值的简写形式，自动包含类型转换，简化代码书写。</p>
+
+        <h3>1. 基本赋值运算符（=）</h3>
+        <p>最基础赋值符号，语法：<code>变量名 = 表达式;</code>，将右侧表达式结果赋值给左侧变量（左侧必须是变量，不可是常量/表达式）。</p>
+        <pre><code class="language-java">public class BasicAssign {
+    public static void main(String[] args) {
+        int num = 10; // 直接赋值常量
+        int a = 5, b = 3;
+        int sum = a + b; // 赋值表达式结果
+        System.out.println("sum：" + sum); // 8
+        
+        // 错误：左侧必须是变量，不可是表达式
+        // a + b = 10;
+    }
+}</code></pre>
+
+        <h3>2. 复合赋值运算符（6种，常用）</h3>
+        <p>语法：<code>变量名 运算符= 表达式;</code>，等价于<code>变量名 = (变量类型)(变量名 运算符 表达式);</code>，自动完成强制类型转换，避免溢出报错。</p>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>复合运算符</th>
+                <th>等价写法</th>
+                <th>示例</th>
+                <th>变量最终值</th>
+            </tr>
+            <tr>
+                <td>+=</td>
+                <td>变量 = 变量 + 表达式</td>
+                <td>int a=3; a+=2;</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>-=</td>
+                <td>变量 = 变量 - 表达式</td>
+                <td>int a=3; a-=2;</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>*=</td>
+                <td>变量 = 变量 * 表达式</td>
+                <td>int a=3; a*=2;</td>
+                <td>6</td>
+            </tr>
+            <tr>
+                <td>/=</td>
+                <td>变量 = 变量 / 表达式</td>
+                <td>int a=6; a/=2;</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>%=</td>
+                <td>变量 = 变量 % 表达式</td>
+                <td>int a=7; a%=3;</td>
+                <td>1</td>
+            </tr>
+        </table>
+        <pre><code class="language-java">public class ComplexAssign {
+    public static void main(String[] args) {
+        int a = 10;
+        a += 5; // 等价于a = a + 5 → 15
+        System.out.println("a+=5：" + a);
+        
+        a *= 2; // 等价于a = a * 2 → 30
+        System.out.println("a*=2：" + a);
+        
+        // 自动类型转换：byte+int，复合赋值自动强转
+        byte b = 5;
+        b += 10; // 等价于b = (byte)(b + 10) → 15，无报错
+        System.out.println("byte复合赋值：" + b);
+        
+        // 若直接写b = b + 10，会编译报错（b+10为int，需手动强转）
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>四、比较运算符（条件判断基础）</h2>
+        <p>用于比较两个数值/变量的大小或相等性，结果**仅为布尔值（true/false）**，无其他取值，常用于if条件判断、循环控制。</p>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>运算符</th>
+                <th>功能</th>
+                <th>示例</th>
+                <th>结果</th>
+            </tr>
+            <tr>
+                <td>==</td>
+                <td>判断两个值是否相等（注意与=区分）</td>
+                <td>3 == 5、"a" == "b"</td>
+                <td>false、false</td>
+            </tr>
+            <tr>
+                <td>!=</td>
+                <td>判断两个值是否不相等</td>
+                <td>3 != 5</td>
+                <td>true</td>
+            </tr>
+            <tr>
+                <td>></td>
+                <td>判断左侧是否大于右侧</td>
+                <td>10 > 8</td>
+                <td>true</td>
+            </tr>
+            <tr>
+                <td><</td>
+                <td>判断左侧是否小于右侧</td>
+                <td>10 < 8</td>
+                <td>false</td>
+            </tr>
+            <tr>
+                <td>>=</td>
+                <td>判断左侧是否大于等于右侧</td>
+                <td>10 >= 10</td>
+                <td>true</td>
+            </tr>
+            <tr>
+                <td><=</td>
+                <td>判断左侧是否小于等于右侧</td>
+                <td>10 <= 8</td>
+                <td>false</td>
+            </tr>
+        </table>
+        <pre><code class="language-java">public class Compare {
+    public static void main(String[] args) {
+        int score = 85;
+        int passScore = 60;
+        
+        // 比较是否及格
+        boolean isPass = score >= passScore;
+        System.out.println("是否及格：" + isPass); // true
+        
+        // 比较是否满分
+        boolean isFull = score == 100;
+        System.out.println("是否满分：" + isFull); // false
+        
+        // 比较大小
+        int a = 20, b = 30;
+        System.out.println("a > b：" + (a > b)); // false
+        System.out.println("a != b：" + (a != b)); // true
+        
+        // 注意：==判断字符串不推荐（比较地址），后续用equals方法
+        String s1 = "Java", s2 = "java";
+        System.out.println("s1==s2：" + (s1 == s2)); // false
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>五、逻辑运算符（布尔值运算核心）</h2>
+        <p>仅用于布尔值（true/false）运算，结果仍为布尔值，分「短路逻辑运算符」（常用）和「非短路逻辑运算符」，核心区别：短路运算符会提前终止无效运算，效率更高。</p>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>运算符</th>
+                <th>类型</th>
+                <th>功能（逻辑规则）</th>
+                <th>短路特性</th>
+                <th>true条件</th>
+            </tr>
+            <tr>
+                <td>&&</td>
+                <td>逻辑与</td>
+                <td>左右两侧均为true，结果才为true</td>
+                <td>短路：左侧为false，右侧不执行</td>
+                <td>左true + 右true</td>
+            </tr>
+            <tr>
+                <td>||</td>
+                <td>逻辑或</td>
+                <td>左右两侧至少1个为true，结果为true</td>
+                <td>短路：左侧为true，右侧不执行</td>
+                <td>左true / 右true / 均true</td>
+            </tr>
+            <tr>
+                <td>!</td>
+                <td>逻辑非</td>
+                <td>取反：true→false，false→true（单目运算符）</td>
+                <td>无（仅1个操作数）</td>
+                <td>原值为false</td>
+            </tr>
+            <tr>
+                <td>&</td>
+                <td>非短路与</td>
+                <td>左右两侧均为true，结果才为true</td>
+                <td>非短路：无论左侧结果，右侧必执行</td>
+                <td>左true + 右true</td>
+            </tr>
+            <tr>
+                <td>|</td>
+                <td>非短路或</td>
+                <td>左右两侧至少1个为true，结果为true</td>
+                <td>非短路：无论左侧结果，右侧必执行</td>
+                <td>左true / 右true / 均true</td>
+            </tr>
+        </table>
+        <pre><code class="language-java">public class Logic {
+    public static void main(String[] args) {
+        boolean flag1 = true, flag2 = false;
+        
+        // 逻辑与（&&）：短路特性
+        boolean res1 = flag2 && (++flag1 > 0);
+        System.out.println("&&结果：" + res1 + "，flag1：" + flag1); // false，flag1=1（右侧未执行）
+        
+        // 非短路与（&）：无短路特性
+        flag1 = true; // 重置flag1
+        boolean res2 = flag2 & (++flag1 > 0);
+        System.out.println("&结果：" + res2 + "，flag1：" + flag1); // false，flag1=2（右侧执行）
+        
+        // 逻辑或（||）：短路特性
+        flag1 = true;
+        boolean res3 = flag1 || (++flag2 > 0);
+        System.out.println("||结果：" + res3 + "，flag2：" + flag2); // true，flag2=0（右侧未执行）
+        
+        // 逻辑非（!）：取反
+        boolean res4 = !flag1;
+        System.out.println("!flag1结果：" + res4); // false
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>六、三元运算符（三目运算，简化条件赋值）</h2>
+        <p>Java唯一三目运算符，语法简洁，用于替代简单的if-else赋值逻辑，**必须有返回值**，不可单独使用（需赋值给变量或作为表达式一部分）。</p>
+        <h3>1. 语法格式</h3>
+        <p><code>条件表达式 ? 表达式1 : 表达式2;</code></p>
+        <ul>
+            <li>执行逻辑：先判断条件表达式，结果为true则执行表达式1，结果为false则执行表达式2。</li>
+            <li>核心要求：表达式1和表达式2类型必须一致（或可自动转换），否则编译报错。</li>
+        </ul>
+        <h3>2. 示例用法</h3>
+        <pre><code class="language-java">public class Ternary {
+    public static void main(String[] args) {
+        // 示例1：判断成绩是否及格，返回对应提示
+        int score = 92;
+        String result = score >= 60 ? "及格" : "不及格";
+        System.out.println("成绩结果：" + result); // 及格
+        
+        // 示例2：获取两个数中的最大值
+        int a = 25, b = 38;
+        int max = a > b ? a : b;
+        System.out.println("最大值：" + max); // 38
+        
+        // 示例3：嵌套使用（简化多层判断，不推荐过深，可读性差）
+        int num = 85;
+        String grade = num >= 90 ? "优秀" : (num >= 80 ? "良好" : "合格");
+        System.out.println("成绩等级：" + grade); // 良好
+        
+        // 错误：无返回值使用三元运算符（不可单独执行）
+        // score >= 60 ? System.out.println("及格") : System.out.println("不及格");
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>七、位运算符（基础了解，底层常用）</h2>
+        <p>直接对数据的二进制位执行运算，仅用于整数类型（byte、short、int、long），日常开发用得少，底层优化、硬件交互场景常用，掌握基础用法即可。</p>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>运算符</th>
+                <th>功能</th>
+                <th>示例（二进制→十进制）</th>
+                <th>结果</th>
+            </tr>
+            <tr>
+                <td>&</td>
+                <td>按位与：对应位均为1，结果为1</td>
+                <td>3(011) & 5(101)</td>
+                <td>1(001)</td>
+            </tr>
+            <tr>
+                <td>|</td>
+                <td>按位或：对应位至少1个为1，结果为1</td>
+                <td>3(011) | 5(101)</td>
+                <td>7(111)</td>
+            </tr>
+            <tr>
+                <td>^</td>
+                <td>按位异或：对应位不同为1，相同为0</td>
+                <td>3(011) ^ 5(101)</td>
+                <td>6(110)</td>
+            </tr>
+            <tr>
+                <td>~</td>
+                <td>按位取反：0→1，1→0（单目运算符）</td>
+                <td>~3(011)</td>
+                <td>-4（补码存储）</td>
+            </tr>
+            <tr>
+                <td><<</td>
+                <td>左移：二进制位左移n位，右边补0（等价×2ⁿ）</td>
+                <td>3(011) << 1</td>
+                <td>6(110)</td>
+            </tr>
+            <tr>
+                <td>>></td>
+                <td>右移：二进制位右移n位，左边补符号位（等价÷2ⁿ）</td>
+                <td>6(110) >> 1</td>
+                <td>3(011)</td>
+            </tr>
+        </table>
+        <pre><code class="language-java">public class Bit {
+    public static void main(String[] args) {
+        int a = 3, b = 5;
+        System.out.println("按位与：" + (a & b)); // 1
+        System.out.println("按位或：" + (a | b)); // 7
+        
+        // 左移：3×2¹=6
+        System.out.println("3<<1：" + (a << 1)); // 6
+        // 右移：6÷2¹=3
+        System.out.println("6>>1：" + (6 >> 1)); // 3
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>八、运算符优先级（避坑关键）</h2>
+        <p>多运算符混合运算时，按优先级顺序执行，优先级高的先运算，不确定时**直接加括号**（优先级最高，可读性更强），无需死记优先级。</p>
+        <p>常用优先级（从高到低，仅记核心顺序）：</p>
+        <ol>
+            <li>括号：()（优先级最高，优先使用）</li>
+            <li>单目运算符：++、--、!、~</li>
+            <li>算术运算符：*、/、% > +、-</li>
+            <li>比较运算符：>、<、>=、<= > ==、!=</li>
+            <li>逻辑运算符：&& > ||（!优先级最高，单独在前）</li>
+            <li>三元运算符：?:</li>
+            <li>赋值运算符：=、+=、-=等（优先级最低）</li>
+        </ol>
+        <pre><code class="language-java">public class Priority {
+    public static void main(String[] args) {
+        // 未加括号：按优先级执行，先*后+，结果15
+        int res1 = 3 + 4 * 3;
+        System.out.println("res1：" + res1);
+        
+        // 加括号：先执行括号内，结果21
+        int res2 = (3 + 4) * 3;
+        System.out.println("res2：" + res2);
+        
+        // 混合运算：先算术→比较→逻辑，结果true
+        boolean res3 = 10 - 3 > 5 && 2 + 3 == 5;
+        System.out.println("res3：" + res3);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>九、运算符使用最佳实践（避坑规范）</h2>
+        <ul>
+            <li>整数除法避坑：整数÷整数结果取整，需保留小数时，将其中一个数转为浮点数（如10.0/3而非10/3）。</li>
+            <li>自增自减慎用：避免在复杂表达式中嵌套使用（如a++ + ++a），可读性差且易出错，优先单独一行使用。</li>
+            <li>逻辑运算符优先短路：日常开发优先用&&、||（效率更高），仅底层场景用&、|。</li>
+            <li>三元运算符规范：表达式1和表达式2类型必须一致，避免嵌套过深（最多1层），复杂判断用if-else。</li>
+            <li>优先级不确定加括号：混合运算时，无论优先级如何，用括号明确执行顺序，提升代码可读性。</li>
+            <li>字符串拼接注意：+号两侧有字符串时，自动转为字符串拼接（如1 + "a" → "1a"），数值运算需加括号隔离。</li>
+        </ul>
+        <pre><code class="language-java">public class OperatorRule {
+    public static void main(String[] args) {
+        // 1. 整数除法保留小数正确方式
+        double res1 = 10.0 / 3;
+        System.out.println("保留小数：" + res1); // 3.3333333333333335
+        
+        // 2. 自增自减单独使用（推荐）
+        int a = 5;
+        a++; // 单独一行，清晰无歧义
+        System.out.println("a：" + a); // 6
+        
+        // 3. 字符串拼接隔离数值运算
+        int b = 2, c = 3;
+        String str = "结果：" + (b + c); // 加括号，先数值运算再拼接
+        System.out.println(str); // 结果：5
+    }
+}</code></pre>
+    </section>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

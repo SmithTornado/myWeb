@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C语言指针</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言指针</h1>
+    <p>指针是C语言核心特性，本质是<span style="color:#f56c6c">存储内存地址的变量</span>，通过地址间接操作目标数据，可实现高效内存管理、数组灵活访问、函数地址传递等，是C语言高效性与底层操作能力的核心。</p>
+
+    <section>
+        <h2>一、指针基础（定义与初始化）</h2>
+        <p>指针需绑定目标数据类型（决定解引用内存访问范围），核心原则：先初始化再使用，杜绝野指针。</p>
+
+        <h3>1. 内存地址与取地址符</h3>
+        <p>内存按字节分配唯一编号（地址），变量存于固定地址；<code>&</code>为取地址符，用于获取变量内存地址。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int num = 20;   // 定义int变量，占4字节内存
+    float score = 95.5; // 定义float变量，占4字节内存
+    
+    // %p：地址格式化输出符，打印十六进制地址
+    printf("num的值：%d，num的地址：%p\n", num, &num);
+    printf("score的值：%.1f，score的地址：%p\n", score, &score);
+    return 0;
+}</code></pre>
+
+        <h3>2. 指针定义语法</h3>
+        <p>语法：<code>数据类型 *指针变量名;</code>，<code>*</code>表示变量为指针，数据类型需与目标变量一致。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 1. 定义对应类型指针（*仅绑定变量名，推荐分行定义）
+    int *p_int;     // 指向int类型变量的指针
+    float *p_float; // 指向float类型变量的指针
+    char *p_char;   // 指向char类型变量的指针
+    
+    // 错误写法：仅p1是指针，p2是普通int变量
+    int* p1, p2;
+    // 正确写法：p3、p4均为int指针（最佳实践）
+    int *p3, *p4;
+    return 0;
+}</code></pre>
+
+        <h3>3. 指针初始化（避坑关键）</h3>
+        <p>未初始化指针为野指针（指向随机地址，操作会崩溃），3种标准初始化方式。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int num = 30;
+    
+    // 方式1：指向已定义变量（最常用，绑定目标地址）
+    int *p1 = &num;
+    
+    // 方式2：空指针初始化（暂时无目标时用，不可解引用）
+    int *p2 = NULL;
+    
+    // 方式3：指针指向指针（多级指针基础）
+    int *p3 = p1;
+    
+    printf("p1指向的地址：%p，num的地址：%p\n", p1, &num); // 地址一致
+    printf("p2的值：%p\n", p2); // 输出NULL（本质是0地址）
+    return 0;
+}</code></pre>
+
+        <h3>4. 指针解引用（访问目标数据）</h3>
+        <p><code>*</code>为解引用符，通过指针变量前加<code>*</code>，可读取/修改目标变量的值。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 100;
+    int *p = &a; // 指针p绑定a的地址
+    
+    // 1. 解引用读数据：*p等价于a
+    printf("*p = %d，a = %d\n", *p, a); // 输出100 100
+    
+    // 2. 解引用改数据：修改*p等价于修改a
+    *p = 200;
+    printf("修改后：*p = %d，a = %d\n", *p, a); // 输出200 200
+    
+    return 0;
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>二、指针核心操作（运算与访问）</h2>
+        <p>指针运算本质是地址运算，核心是自增/自减（按目标类型偏移），支持地址加减整数。</p>
+
+        <h3>1. 指针自增自减（最常用运算）</h3>
+        <p>指针±1偏移量 = 目标数据类型字节数（int偏移4，char偏移1，float偏移4）。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int arr[] = {1,2,3};
+    int *p = arr; // 指针指向数组首元素（数组名=首元素地址）
+    char c = 'A';
+    char *p_c = &c;
+    
+    printf("初始p地址：%p，*p = %d\n", p, *p); // 指向arr[0]=1
+    p++; // int指针+1，偏移4字节，指向arr[1]
+    printf("p++后地址：%p，*p = %d\n", p, *p); // 指向arr[1]=2
+    
+    printf("初始p_c地址：%p，*p_c = %c\n", p_c, *p_c); // 指向'A'
+    p_c++; // char指针+1，偏移1字节
+    printf("p_c++后地址：%p\n", p_c); // 地址+1
+    return 0;
+}</code></pre>
+
+        <h3>2. 指针加减整数运算</h3>
+        <p>语法：<code>指针变量 ± 整数</code>，偏移量 = 整数 × 目标类型字节数，用于批量访问连续内存。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int arr[] = {10,20,30,40};
+    int *p = arr;
+    
+    // p+2：偏移2×4=8字节，指向arr[2]
+    printf("p+2指向的值：%d\n", *(p+2)); // 输出30
+    // p-1：偏移-4字节，指向无效地址（不可解引用）
+    // printf("%d\n", *(p-1)); // 错误：地址越界
+    
+    p += 3; // 指针偏移3步，指向arr[3]
+    printf("p+=3后的值：%d\n", *p); // 输出40
+    return 0;
+}</code></pre>
+
+        <h3>3. 指针比较运算</h3>
+        <p>指针可比较地址大小，常用于连续内存（数组）的遍历终止条件。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int arr[] = {5,15,25};
+    int *p_start = arr;       // 指向数组首元素
+    int *p_end = arr + 2;     // 指向数组尾元素（arr[2]）
+    
+    if (p_start < p_end) {
+        printf("首地址小于尾地址\n");
+    }
+    
+    // 指针相等：指向同一地址
+    int *p = &arr[1];
+    if (p == arr + 1) {
+        printf("p指向arr[1]\n");
+    }
+    return 0;
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>三、指针与数组（核心关联）</h2>
+        <p>C语言中数组名本质是「数组首元素地址常量」，指针与数组可互通访问，指针访问数组更灵活。</p>
+
+        <h3>1. 数组名与指针的等价性</h3>
+        <p>arr ≡ &arr[0]（数组名=首元素地址），arr[i] ≡ *(arr+i)，*(p+i) ≡ p[i]（指针可当数组用）。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int arr[] = {100,200,300,400};
+    int *p = arr; // 等价于 int *p = &arr[0]
+    
+    // 4种等价访问方式
+    printf("arr[0] = %d，*(arr+0) = %d\n", arr[0], *(arr+0));
+    printf("p[1] = %d，*(p+1) = %d\n", p[1], *(p+1));
+    
+    // 数组名是常量，不可赋值（错误）
+    // arr = p;
+    // 指针是变量，可重新指向（正确）
+    p = &arr[2];
+    printf("p指向arr[2]：%d\n", *p);
+    return 0;
+}</code></pre>
+
+        <h3>2. 指针遍历数组（高效方式）</h3>
+        <p>利用指针自增，避免下标计算，遍历效率更高，适合大规模数组。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int arr[] = {2,4,6,8,10};
+    int len = sizeof(arr)/sizeof(arr[0]);
+    int *p = arr; // 指针指向数组首元素
+    
+    printf("指针遍历数组：");
+    // 方式1：指针自增遍历
+    for (int i=0; i<len; i++) {
+        printf("%d ", *p);
+        p++; // 每次偏移4字节，指向next元素
+    }
+    
+    printf("\n");
+    // 方式2：指针范围遍历（更简洁）
+    int *p_start = arr;
+    int *p_end = arr + len;
+    printf("指针范围遍历：");
+    while (p_start < p_end) {
+        printf("%d ", *p_start);
+        p_start++;
+    }
+    return 0;
+}</code></pre>
+
+        <h3>3. 指针操作二维数组</h3>
+        <p>二维数组arr[i][j] ≡ *(arr[i[ij) ≡ *(*(arr+i)+j)，arr[i]是第i行首元素地址。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int arr[2][3] = {{1,2,3}, {4,5,6}};
+    int *p = &arr[0][0]; // 指向二维数组首个元素
+    int row = sizeof(arr)/sizeof(arr[0]); // 行数2
+    int col = sizeof(arr[0])/sizeof(arr[0][0]); // 列数3
+    
+    // 指针遍历二维数组（按内存顺序）
+    printf("二维数组遍历：");
+    for (int i=0; i<row*col; i++) {
+        printf("%d ", *p);
+        p++;
+    }
+    
+    // 指针访问指定元素arr[1][2]
+    printf("\narr[1][2] = %d\n", *(*(arr+1)+2)); // 输出6
+    return 0;
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>四、指针与函数（地址传递核心）</h2>
+        <p>指针作为函数参数，实现「地址传递」（可修改实参值）；指针作为返回值，可返回函数内局部变量地址（需谨慎）。</p>
+
+        <h3>1. 指针作为函数参数（修改实参）</h3>
+        <p>值传递无法修改实参，地址传递通过指针解引用，直接操作实参内存。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 指针参数：通过*p修改实参值
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main() {
+    int x = 10, y = 20;
+    printf("交换前：x=%d，y=%d\n", x, y);
+    swap(&x, &y); // 传入实参地址
+    printf("交换后：x=%d，y=%d\n", x, y); // 实参被修改
+    return 0;
+}</code></pre>
+
+        <h3>2. 指针作为函数返回值</h3>
+        <p>返回值为指针，可传递内存地址，但禁止返回函数内局部变量地址（函数结束局部变量销毁）。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 正确：返回全局变量地址（全局变量生命周期随程序）
+int g_num = 100;
+int *get_global_ptr() {
+    return &g_num;
+}
+
+// 错误：返回局部变量地址（函数结束后内存释放）
+int *get_local_ptr() {
+    int l_num = 200;
+    return &l_num;
+}
+
+int main() {
+    int *p1 = get_global_ptr();
+    printf("全局变量值：%d\n", *p1); // 正确，输出100
+    
+    int *p2 = get_local_ptr();
+    printf("局部变量地址值：%d\n", *p2); // 随机值（非法访问）
+    return 0;
+}</code></pre>
+
+        <h3>3. 数组作为函数参数（本质是指针）</h3>
+        <p>数组传参退化为指针，函数内无法用sizeof计算数组长度，需手动传入长度。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+// arr本质是int*指针，len需手动传入
+void print_arr(int arr[], int len) {
+    for (int i=0; i<len; i++) {
+        printf("%d ", arr[i]);
+    }
+}
+
+int main() {
+    int arr[] = {1,3,5,7,9};
+    int len = sizeof(arr)/sizeof(arr[0]);
+    print_arr(arr, len); // 传入数组名（首地址）+长度
+    return 0;
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>五、多级指针（进阶）</h2>
+        <p>指针指向指针，即存储指针变量的地址，常用二级指针，语法：<code>数据类型 **多级指针名;</code>。</p>
+        <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int num = 50;
+    int *p1 = &num;   // 一级指针：指向num
+    int **p2 = &p1;   // 二级指针：指向p1
+    
+    // 多级解引用访问目标值
+    printf("num = %d\n", num);
+    printf("*p1 = %d\n", *p1);
+    printf("**p2 = %d\n", **p2); // 二级解引用，等价于*p1=num
+    
+    // 地址关系
+    printf("&num = %p，p1 = %p\n", &num, p1);
+    printf("&p1 = %p，p2 = %p\n", &p1, p2);
+    return 0;
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>六、指针使用避坑与最佳实践</h2>
+        <ul>
+            <li>杜绝野指针：未使用的指针初始化NULL，指针指向的内存释放后及时置NULL，不可解引用NULL。</li>
+            <li>下标不越界：指针运算需控制范围，避免指向无效内存（如数组外地址），C语言不检查地址越界。</li>
+            <li>类型匹配：指针类型需与目标变量一致，禁止不同类型指针随意赋值（如int*赋值给char*）。</li>
+            <li>函数返回指针：禁止返回局部变量地址，优先返回全局变量、静态变量或动态内存地址。</li>
+            <li>命名规范：指针变量名前缀加p（如p_num、p_arr），多级指针加对应前缀（如pp_num），提升可读性。</li>
+        </ul>
+    </section>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

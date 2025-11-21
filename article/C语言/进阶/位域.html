@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言位域</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../css/common.css">
+</head>
+<body>
+
+    <h1>C语言位域</h1>
+
+    <h2>1. 位域的定义与语法</h2>
+    <p>位域（Bit Field）是C语言中一种特殊的结构体成员定义方式，它允许我们精确指定一个成员占用的二进制位数，从而节省内存空间。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 定义一个包含位域的结构体
+struct BitFieldExample {
+    // 位域成员：类型 成员名: 占用位数;
+    unsigned int flag1 : 1;  // 占用1位，只能存储0或1
+    unsigned int flag2 : 2;  // 占用2位，可存储0-3
+    unsigned int value : 4;  // 占用4位，可存储0-15
+};
+
+int main() {
+    struct BitFieldExample bf;
+    
+    // 位域赋值（注意不能超过占用位数的范围）
+    bf.flag1 = 1;    // 正确，1位最大存储1
+    bf.flag2 = 3;    // 正确，2位最大存储3（二进制11）
+    bf.value = 10;   // 正确，4位最大存储15（二进制1111）
+    
+    printf("flag1: %u\n", bf.flag1);
+    printf("flag2: %u\n", bf.flag2);
+    printf("value: %u\n", bf.value);
+    
+    // 错误示例：超出位数范围，会发生溢出（结果取低位）
+    bf.flag2 = 4;    // 4的二进制是100，超出2位，实际存储0（取低2位00）
+    printf("flag2（溢出后）: %u\n", bf.flag2);
+    
+    return 0;
+}</code></pre>
+
+    <h2>2. 位域的内存分配规则</h2>
+    <p>位域的内存分配由编译器负责，核心规则是“尽量紧凑存储，不跨类型边界”：</p>
+    <ol>
+        <li>同一结构体中，相邻位域成员若类型相同，且总位数不超过该类型的大小（如unsigned int为4字节32位），则会紧凑存储在同一个字节/字中；</li>
+        <li>若相邻位域类型不同，或总位数超过类型大小，则会分配新的存储单元；</li>
+        <li>位域的存储顺序（从高位到低位或低位到高位）由编译器决定，可通过编译选项调整（如GCC的`-fpack-struct`）。</li>
+    </ol>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 示例1：相同类型的位域紧凑存储
+struct CompactBitField {
+    unsigned int a : 2;  // 占用2位
+    unsigned int b : 3;  // 占用3位（与a同类型，总5位≤32位，紧凑存储）
+    unsigned int c : 4;  // 占用4位（总9位≤32位，继续紧凑存储）
+};
+
+// 示例2：不同类型的位域不紧凑存储
+struct NonCompactBitField {
+    unsigned int a : 2;  // 占用2位（存储在第一个unsigned int中）
+    char b : 3;          // 类型不同，分配新的char单元（1字节）
+    unsigned int c : 4;  // 类型不同，分配新的unsigned int单元（4字节）
+};
+
+int main() {
+    printf("CompactBitField大小: %lu 字节\n", sizeof(struct CompactBitField));  // 输出4（32位足够存储2+3+4=9位）
+    printf("NonCompactBitField大小: %lu 字节\n", sizeof(struct NonCompactBitField));  // 输出4+1+4=9字节（不同编译器可能有对齐差异）
+    return 0;
+}</code></pre>
+
+    <h2>3. 位域的使用场景</h2>
+
+    <h3>3.1 硬件寄存器操作（最常用场景）</h3>
+    <p>嵌入式开发中，硬件寄存器的每个位通常对应特定功能（如引脚方向、中断使能等），位域可直接映射寄存器的位布局，代码直观易懂。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 模拟GPIO端口控制寄存器（假设为32位寄存器）
+struct GPIO_Reg {
+    unsigned int pin0_dir : 1;  // 引脚0方向：0=输入，1=输出
+    unsigned int pin0_val : 1;  // 引脚0电平：0=低，1=高
+    unsigned int pin1_dir : 1;  // 引脚1方向
+    unsigned int pin1_val : 1;  // 引脚1电平
+    unsigned int reserved : 28; // 保留位（占位，不使用）
+};
+
+int main() {
+    // 假设0x40000000是GPIO寄存器的地址
+    struct GPIO_Reg *gpio = (struct GPIO_Reg *)0x40000000;
+    
+    // 配置引脚0为输出，电平为高
+    gpio->pin0_dir = 1;
+    gpio->pin0_val = 1;
+    
+    // 配置引脚1为输入
+    gpio->pin1_dir = 0;
+    
+    printf("引脚0方向: %u, 电平: %u\n", gpio->pin0_dir, gpio->pin0_val);
+    printf("引脚1方向: %u\n", gpio->pin1_dir);
+    
+    return 0;
+}</code></pre>
+
+    <h3>3.2 节省内存（存储大量布尔/小范围数值）</h3>
+    <p>当需要存储多个布尔值（0/1）或小范围整数时，位域可大幅减少内存占用（如10个布尔值用位域仅需2字节，普通int则需40字节）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 用位域存储用户权限（8个布尔权限，仅需1字节）
+struct UserPermissions {
+    unsigned int read : 1;    // 读权限
+    unsigned int write : 1;   // 写权限
+    unsigned int execute : 1; // 执行权限
+    unsigned int delete : 1;  // 删除权限
+    unsigned int create : 1;  // 创建权限
+    unsigned int modify : 1;  // 修改权限
+    unsigned int share : 1;   // 分享权限
+    unsigned int admin : 1;   // 管理员权限
+};
+
+// 普通int存储（8个权限，每个4字节，共32字节）
+struct UserPermissions_Int {
+    int read;
+    int write;
+    int execute;
+    int delete;
+    int create;
+    int modify;
+    int share;
+    int admin;
+};
+
+int main() {
+    printf("位域存储大小: %lu 字节\n", sizeof(struct UserPermissions));       // 输出1字节
+    printf("普通int存储大小: %lu 字节\n", sizeof(struct UserPermissions_Int)); // 输出32字节
+    return 0;
+}</code></pre>
+
+    <h3>3.3 网络协议/文件格式解析</h3>
+    <p>网络协议（如TCP/IP）或文件格式（如图片、视频）的头部字段 often 按位定义（如IP头部的“版本号”占4位，“IHL”占4位），位域可直接映射这些字段。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 模拟IP头部的部分位字段（简化版）
+struct IPHeader {
+    unsigned int version : 4;  // IP版本号（4位，如IPv4=4）
+    unsigned int ihl : 4;      // 头部长度（4位，单位：32位字）
+    unsigned int tos : 8;      // 服务类型（8位）
+    unsigned int total_len : 16; // 总长度（16位）
+};
+
+int main() {
+    // 假设从网络接收的IP头部数据（简化）
+    unsigned char ip_data[4] = {0x45, 0x00, 0x00, 0x28}; // 0x45=版本4+IHL5，0x00=TOS，0x0028=总长度40
+    struct IPHeader *ip_header = (struct IPHeader *)ip_data;
+    
+    printf("IP版本: %u\n", ip_header->version);    // 输出4（IPv4）
+    printf("头部长度: %u 字节\n", ip_header->ihl * 4); // 输出5*4=20字节
+    printf("总长度: %u 字节\n", ip_header->total_len); // 输出40字节
+    return 0;
+}</code></pre>
+
+    <h2>4. 位域的注意事项</h2>
+
+    <h3>4.1 类型限制</h3>
+    <p>位域的基类型只能是 <code>unsigned int</code>、<code>signed int</code> 或 <code>int</code>（C99后支持 <code>_Bool</code>、<code>char</code> 等整数类型），不能是指针、浮点数等非整数类型。</p>
+    <pre><code class="language-c">// 错误示例：位域基类型不能是指针或浮点数
+struct ErrorBitField {
+    int *p : 2;  // 编译错误：指针类型不能作为位域基类型
+    float f : 4; // 编译错误：浮点数类型不能作为位域基类型
+};</code></pre>
+
+    <h3>4.2 不能取位域的地址</h3>
+    <p>位域成员可能不占用完整的字节/字，编译器不允许对其取地址（&操作符），无法通过指针间接访问。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+struct BitField {
+    unsigned int a : 2;
+};
+
+int main() {
+    struct BitField bf;
+    // printf("%p\n", &bf.a);  // 编译错误：不能取位域成员的地址
+    return 0;
+}</code></pre>
+
+    <h3>4.3 溢出与符号位问题</h3>
+    <p>1. 位域赋值超出其占用位数时，会发生溢出，结果仅保留低位部分；</p>
+    <p>2. 若位域基类型为 <code>signed int</code>，则最高位为符号位，存储负数时需注意位数足够（如1位signed位域只能表示0和-1，无法表示1）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+struct SignedBitField {
+    signed int a : 1;  // 1位signed位域（符号位+数据位）
+    signed int b : 3;  // 3位signed位域（最高位为符号位）
+};
+
+int main() {
+    struct SignedBitField sbf;
+    
+    sbf.a = 1;         // 二进制1，作为signed int是-1（补码规则）
+    printf("sbf.a: %d\n", sbf.a);  // 输出-1
+    
+    sbf.b = 3;         // 二进制011（正数3）
+    printf("sbf.b: %d\n", sbf.b);  // 输出3
+    
+    sbf.b = -2;        // 二进制110（补码，3位signed可表示-4~3）
+    printf("sbf.b（负数）: %d\n", sbf.b);  // 输出-2
+    
+    return 0;
+}</code></pre>
+
+    <h3>4.4 跨平台兼容性</h3>
+    <p>位域的存储顺序（高位在前/低位在前）、对齐方式由编译器决定，不同平台（如x86、ARM）可能存在差异。若需跨平台兼容，建议：</p>
+    <ul>
+        <li>使用 <code>unsigned int</code> 作为位域基类型（避免符号位歧义）；</li>
+        <li>避免依赖位域的存储顺序，必要时用位运算（&、|、&lt;&lt;、>>）手动操作位。</li>
+    </ul>
+
+    <h2>5. 位域与位运算的对比</h2>
+    <p>位域和位运算都可操作二进制位，但适用场景不同：</p>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <tr>
+            <th>特性</th>
+            <th>位域</th>
+            <th>位运算（&、|、&lt;&lt;、>>）</th>
+        </tr>
+        <tr>
+            <td>可读性</td>
+            <td>高，直接用成员名访问位，无需记忆位偏移</td>
+            <td>低，需手动计算位偏移（如第3位需 &lt;<2）</td>
+        </tr>
+        <tr>
+            <td>内存占用</td>
+            <td>自动紧凑存储，节省内存</td>
+            <td>需手动管理存储（如用int存储多个位），内存占用可能更高</td>
+        </tr>
+        <tr>
+            <td>灵活性</td>
+            <td>低，位布局固定，修改需调整结构体</td>
+            <td>高，可动态操作任意位，无需修改代码结构</td>
+        </tr>
+        <tr>
+            <td>适用场景</td>
+            <td>固定位布局（如硬件寄存器、协议头部）</td>
+            <td>动态位操作（如权限配置、状态标志）</td>
+        </tr>
+    </table>
+
+    <h2>6. 总结</h2>
+    <p>位域是C语言中针对“二进制位操作”的优化特性，核心优势是：</p>
+    <ol>
+        <li>直观映射固定位布局（如硬件寄存器、协议头部），代码可读性高；</li>
+        <li>自动紧凑存储，大幅节省内存（尤其适合嵌入式、网络编程）。</li>
+    </ol>
+    <p>使用时需注意类型限制、溢出问题和跨平台兼容性，若需动态操作位或追求跨平台兼容，可结合位运算使用。</p>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20);
+    </script>
+</body>
+</html>

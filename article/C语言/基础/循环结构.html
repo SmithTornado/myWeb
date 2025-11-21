@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言循环结构</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言循环结构</h1>
+    <p>循环结构是程序三大基本结构之一，用于重复执行一段代码，直到满足指定条件后停止，核心解决大量重复操作场景，C语言常用循环有for、while、do-while三种，需掌握各自语法、执行流程及适用场景。</p>
+
+    <h2>一、for循环（最常用，固定次数循环首选）</h2>
+    <p>语法清晰，可直接控制循环初始化、条件判断、步长更新，适合已知循环次数的场景。</p>
+    <p>语法：<code>for(初始化表达式; 条件判断表达式; 步长更新表达式) { 循环体代码; }</code></p>
+    <p>执行流程：1. 执行初始化表达式（仅1次）→ 2. 判断条件表达式，为真执行循环体，为假结束循环 → 3. 执行步长更新表达式 → 4. 重复步骤2-3</p>
+
+    <h3>基础用法</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 示例1：打印1-5（循环5次）
+    for (int i = 1; i <= 5; i++) {
+        printf("%d ", i);
+    }
+    printf("\n");
+
+    // 示例2：计算1-100求和
+    int sum = 0;
+    for (int i = 1; i <= 100; i++) {
+        sum += i; // 等价于sum = sum + i
+    }
+    printf("1-100求和：%d\n", sum);
+
+    // 示例3：步长为2，打印1-10奇数
+    for (int i = 1; i <= 10; i += 2) {
+        printf("%d ", i);
+    }
+    return 0;
+}</code></pre>
+
+    <h3>特殊用法</h3>
+    <ul>
+        <li>初始化、步长可省略（条件不可省，需用分号占位）</li>
+        <li>多变量控制循环（用逗号分隔表达式）</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 省略初始化（变量提前定义）
+    int i = 1;
+    for (; i <= 3; i++) {
+        printf("%d ", i);
+    }
+    printf("\n");
+
+    // 省略步长（循环体内更新变量）
+    for (int j = 5; j >= 1; ) {
+        printf("%d ", j);
+        j--;
+    }
+    printf("\n");
+
+    // 多变量控制（同时更新i和j）
+    for (int i = 1, j = 10; i <= j; i++, j--) {
+        printf("i=%d, j=%d\n", i, j);
+    }
+    return 0;
+}</code></pre>
+
+    <h2>二、while循环（未知次数循环首选）</h2>
+    <p>语法简洁，仅需条件判断，适合循环次数不确定、依赖条件触发停止的场景。</p>
+    <p>语法：<code>while(条件判断表达式) { 循环体代码; }</code></p>
+    <p>执行流程：1. 判断条件表达式，为真执行循环体，为假结束循环 → 2. 循环体执行完后重复步骤1</p>
+    <p>注意：需在循环体内更新条件相关变量，否则易造成死循环。</p>
+
+    <h3>基础用法</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 示例1：打印1-4
+    int i = 1;
+    while (i <= 4) {
+        printf("%d ", i);
+        i++; // 必须更新变量，避免死循环
+    }
+    printf("\n");
+
+    // 示例2：输入数字，直到输入0停止
+    int num;
+    printf("输入数字（输入0结束）：");
+    scanf("%d", &amp;num);
+    while (num != 0) {
+        printf("你输入了：%d\n", num);
+        printf("继续输入（输入0结束）：");
+        scanf("%d", &amp;num);
+    }
+    printf("程序结束\n");
+    return 0;
+}</code></pre>
+
+    <h3>死循环场景（警惕）</h3>
+    <p>条件永远为真时触发死循环，需避免无意义死循环，必要时用break终止。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 错误：条件恒真，无变量更新，永久循环
+    // while (1) {
+    //     printf("死循环\n");
+    // }
+
+    // 正确：死循环+break终止（按需使用）
+    int count = 0;
+    while (1) {
+        count++;
+        printf("%d ", count);
+        if (count == 3) {
+            break; // 满足条件，终止循环
+        }
+    }
+    return 0;
+}</code></pre>
+
+    <h2>三、do-while循环（至少执行1次的循环）</h2>
+    <p>先执行循环体，再判断条件，无论条件是否为真，循环体至少执行1次，适合需先执行再判断的场景。</p>
+    <p>语法：<code>do { 循环体代码; } while(条件判断表达式);</code></p>
+    <p>执行流程：1. 执行循环体代码 → 2. 判断条件表达式，为真重复步骤1，为假结束循环</p>
+    <p>注意：循环末尾需加分号。</p>
+
+    <h3>基础用法</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 示例1：条件为假仍执行1次
+    int i = 6;
+    do {
+        printf("%d ", i); // 输出6，之后判断i<=5为假，循环结束
+        i++;
+    } while (i <= 5);
+    printf("\n");
+
+    // 示例2：输入密码，直到输入正确（至少输入1次）
+    int pwd, correct_pwd = 123456;
+    do {
+        printf("输入密码：");
+        scanf("%d", &amp;pwd);
+    } while (pwd != correct_pwd); // 密码错误则重复输入
+    printf("密码正确，登录成功\n");
+    return 0;
+}</code></pre>
+
+    <h2>四、循环控制语句（break、continue）</h2>
+    <p>用于灵活控制循环执行流程，打破默认执行逻辑。</p>
+
+    <h3>1. break语句</h3>
+    <p>功能：立即终止当前所在循环（for/while/do-while），跳出循环体执行后续代码，不影响外层循环（嵌套场景）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 循环中遇到break直接终止
+    for (int i = 1; i <= 10; i++) {
+        if (i == 4) {
+            break; // i=4时终止循环
+        }
+        printf("%d ", i); // 输出1 2 3
+    }
+    return 0;
+}</code></pre>
+
+    <h3>2. continue语句</h3>
+    <p>功能：跳过当前循环剩余代码，直接进入下一次循环判断，不终止循环。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 跳过i=4，执行下一次循环
+    for (int i = 1; i <= 5; i++) {
+        if (i == 4) {
+            continue; // 跳过后续printf，直接执行i++
+        }
+        printf("%d ", i); // 输出1 2 3 5
+    }
+    return 0;
+}</code></pre>
+
+    <h2>五、循环嵌套（循环内包含循环）</h2>
+    <p>外层循环控制行数，内层循环控制每行内容，常用于二维场景（如打印图形、矩阵）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    // 示例：打印3行4列星号
+    for (int i = 1; i <= 3; i++) { // 外层循环：3行
+        for (int j = 1; j <= 4; j++) { // 内层循环：每行4个
+            printf("* ");
+        }
+        printf("\n"); // 每行结束换行
+    }
+
+    // 示例：打印直角三角形（5行）
+    printf("\n直角三角形：\n");
+    for (int i = 1; i <= 5; i++) {
+        for (int j = 1; j <= i; j++) { // 第i行打印i个星号
+            printf("* ");
+        }
+        printf("\n");
+    }
+    return 0;
+}</code></pre>
+
+    <h2>六、三种循环对比与适用场景</h2>
+    <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+        <tr>
+            <th>循环类型</th>
+            <th>核心特点</th>
+            <th>执行次数</th>
+            <th>适用场景</th>
+        </tr>
+        <tr>
+            <td>for循环</td>
+            <td>初始化、条件、步长集中，语法规整</td>
+            <td>已知次数</td>
+            <td>固定次数循环（如遍历、计数求和）</td>
+        </tr>
+        <tr>
+            <td>while循环</td>
+            <td>仅条件判断，语法简洁</td>
+            <td>未知次数</td>
+            <td>依赖条件停止（如输入判断、状态检测）</td>
+        </tr>
+        <tr>
+            <td>do-while循环</td>
+            <td>先执行后判断</td>
+            <td>至少1次</td>
+            <td>需先执行再判断（如密码输入、初始化后校验）</td>
+        </tr>
+    </table>
+
+    <h2>七、常见问题与注意事项</h2>
+    <ul>
+        <li><strong>死循环避免</strong>：while/do-while需确保循环体内更新条件变量；for循环步长更新不可遗漏。</li>
+        <li><strong>变量作用域</strong>：for循环内定义的变量仅在循环内有效，外部无法访问。</li>
+        <li><strong>循环嵌套效率</strong>：减少不必要的嵌套层级，内层循环尽量减少重复计算。</li>
+        <li><strong>break与continue区别</strong>：break终止整个循环，continue仅跳过当前次循环剩余代码。</li>
+        <li><strong>do-while分号</strong>：循环末尾必须加半分号，否则编译报错。</li>
+    </ul>
+</body>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</html>
+
+<data-inline-no-margin type="video-group" value_id="30145235672549378_null_0_37994_102_0" alt="" extra="{&quot;video_title_show&quot;:true}"></data-inline-no-margin>

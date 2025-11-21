@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言枚举</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../css/common.css">
+</head>
+<body>
+
+    <h1>C语言枚举</h1>
+
+    <h2>1. 枚举的定义</h2>
+    <p>枚举（Enumeration）是一种用户自定义的数据类型，它允许我们为一组整数常量赋予有意义的名字，从而提高代码的可读性和可维护性。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 定义一个名为Weekday的枚举类型
+enum Weekday {
+    Monday,    // 默认为0
+    Tuesday,   // 默认为1
+    Wednesday, // 默认为2
+    Thursday,  // 默认为3
+    Friday,    // 默认为4
+    Saturday,  // 默认为5
+    Sunday     // 默认为6
+};
+
+int main() {
+    // 声明一个枚举变量
+    enum Weekday today;
+    today = Wednesday;
+    
+    // 输出枚举值
+    printf("今天是星期%d\n", today + 1); // 输出：今天是星期3
+    
+    return 0;
+}</code></pre>
+
+    <h2>2. 枚举的初始化</h2>
+    <p>枚举元素可以自定义初始值，未显式初始化的元素会在前一个元素的基础上加1。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 自定义枚举值
+enum Color {
+    Red = 10,
+    Green,  // 自动为11
+    Blue = 20,
+    Yellow  // 自动为21
+};
+
+int main() {
+    enum Color favorite = Blue;
+    printf("我最喜欢的颜色值是：%d\n", favorite); // 输出：我最喜欢的颜色值是：20
+    
+    return 0;
+}</code></pre>
+
+    <h2>3. 枚举的使用场景</h2>
+
+    <h3>3.1 替代魔法数字</h3>
+    <p>使用枚举可以避免在代码中直接使用无意义的数字（魔法数字），使代码更易理解。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 用枚举表示错误码
+enum ErrorCode {
+    SUCCESS = 0,
+    FILE_NOT_FOUND = 1,
+    PERMISSION_DENIED = 2,
+    OUT_OF_MEMORY = 3
+};
+
+// 模拟文件打开函数
+enum ErrorCode openFile(const char* filename) {
+    // 模拟文件不存在的情况
+    return FILE_NOT_FOUND;
+}
+
+int main() {
+    enum ErrorCode result = openFile("test.txt");
+    
+    if (result == SUCCESS) {
+        printf("文件打开成功\n");
+    } else if (result == FILE_NOT_FOUND) {
+        printf("错误：文件未找到\n");
+    } else {
+        printf("未知错误\n");
+    }
+    
+    return 0;
+}</code></pre>
+
+    <h3>3.2 在switch语句中使用</h3>
+    <p>枚举非常适合在switch语句中使用，使分支结构更加清晰。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
+
+void move(enum Direction dir) {
+    switch (dir) {
+        case UP:
+            printf("向上移动\n");
+            break;
+        case DOWN:
+            printf("向下移动\n");
+            break;
+        case LEFT:
+            printf("向左移动\n");
+            break;
+        case RIGHT:
+            printf("向右移动\n");
+            break;
+        default:
+            printf("无效方向\n");
+    }
+}
+
+int main() {
+    move(LEFT);  // 输出：向左移动
+    move(UP);    // 输出：向上移动
+    
+    return 0;
+}</code></pre>
+
+    <h2>4. 枚举的底层实现</h2>
+    <p>在C语言中，枚举本质上是整数类型，默认是<code>int</code>类型。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+enum Size {
+    Small,
+    Medium,
+    Large
+};
+
+int main() {
+    enum Size s = Medium;
+    printf("枚举变量的大小：%lu 字节\n", sizeof(s)); // 输出：枚举变量的大小：4 字节（通常int的大小）
+    printf("Medium的值：%d\n", s); // 输出：Medium的值：1
+    
+    // 强制类型转换
+    int value = (int)Large;
+    printf("Large转换为int后的值：%d\n", value); // 输出：Large转换为int后的值：2
+    
+    return 0;
+}</code></pre>
+
+    <h2>5. 枚举的注意事项</h2>
+
+    <h3>5.1 枚举元素不能重名</h3>
+    <pre><code class="language-c">// 错误示例
+enum Test {
+    A,
+    B,
+    A  // 编译错误：重定义
+};</code></pre>
+
+    <h3>5.2 枚举变量可以赋值不在枚举列表中的整数值</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+enum Num {
+    One = 1,
+    Two,
+    Three
+};
+
+int main() {
+    enum Num n = 5; // 可以赋值不在枚举列表中的整数值
+    printf("n = %d\n", n); // 输出：n = 5
+    
+    return 0;
+}</code></pre>
+
+    <h3>5.3 枚举与#define的区别</h3>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <tr>
+            <th>特性</th>
+            <th>枚举（enum）</th>
+            <th>#define</th>
+        </tr>
+        <tr>
+            <td>类型检查</td>
+            <td>有类型检查</td>
+            <td>无类型检查</td>
+        </tr>
+        <tr>
+            <td>作用域</td>
+            <td>有作用域限制</td>
+            <td>全局生效</td>
+        </tr>
+        <tr>
+            <td>调试</td>
+            <td>可调试</td>
+            <td>不可调试</td>
+        </tr>
+        <tr>
+            <td>底层实现</td>
+            <td>编译为整数</td>
+            <td>直接替换为值</td>
+        </tr>
+    </table>
+
+    <h2>6. 枚举的高级用法</h2>
+
+    <h3>6.1 枚举的前向声明</h3>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 前向声明
+enum Status;
+
+// 函数声明
+void printStatus(enum Status s);
+
+// 后续定义
+enum Status {
+    OK,
+    ERROR
+};
+
+void printStatus(enum Status s) {
+    if (s == OK) {
+        printf("操作成功\n");
+    } else {
+        printf("操作失败\n");
+    }
+}
+
+int main() {
+    enum Status result = OK;
+    printStatus(result); // 输出：操作成功
+    
+    return 0;
+}</code></pre>
+
+    <h3>6.2 枚举与位运算结合（枚举标志）</h3>
+    <p>可以将枚举与位运算结合，实现复杂的标志系统。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+// 枚举标志，每个元素是2的幂
+enum Permission {
+    READ = 1 &lt;&lt; 0,   // 0001
+    WRITE = 1 &lt;&lt; 1,  // 0010
+    EXECUTE = 1 &lt;&lt; 2 // 0100
+};
+
+// 检查权限
+int hasPermission(int permissions, enum Permission p) {
+    return (permissions & p) != 0;
+}
+
+int main() {
+    // 组合权限：读和执行
+    int userPermission = READ | EXECUTE;
+    
+    if (hasPermission(userPermission, READ)) {
+        printf("有读权限\n");
+    }
+    if (hasPermission(userPermission, WRITE)) {
+        printf("有写权限\n");
+    } else {
+        printf("无写权限\n");
+    }
+    if (hasPermission(userPermission, EXECUTE)) {
+        printf("有执行权限\n");
+    }
+    
+    return 0;
+}</code></pre>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20);
+    </script>
+</body>
+</html>

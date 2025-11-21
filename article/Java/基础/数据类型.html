@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java数据类型</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Java数据类型</h1>
+    <p>Java是<span style="color:#f56c6c">强类型语言</span>，所有数据必须指定明确类型，类型决定数据存储格式、占用内存大小及可执行运算。核心分为「基本数据类型」（8种，存储原始值）和「引用数据类型」（存储对象地址），是变量定义、数据处理的基础前提。</p>
+
+    <section>
+        <h2>一、数据类型核心分类</h2>
+        <p>Java数据类型按存储本质划分为两类，核心差异的是存储内容与内存管理方式，需精准区分：</p>
+        <ul>
+            <li>基本数据类型：直接存储「原始数据值」，占用内存固定且极小，JVM直接管理内存，无需垃圾回收。</li>
+            <li>引用数据类型：存储「对象的内存地址」，不存原始数据，对象本身存于堆内存，由JVM垃圾回收机制管理生命周期。</li>
+        </ul>
+        <pre><code class="language-java">public class TypeCategory {
+    public static void main(String[] args) {
+        // 基本数据类型：存储原始值18
+        int age = 18;
+        // 引用数据类型：存储字符串对象的内存地址，不存"Java"本身
+        String lang = "Java";
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>二、基本数据类型（8种，必掌握）</h2>
+        <p>Java内置8种基本数据类型，按用途分4大类，是日常开发高频使用类型，需牢记「字节数、存储范围、核心用途」三大关键信息。</p>
+
+        <h3>1. 整型（存储整数，无小数）</h3>
+        <p>仅存储正整数、负整数、0，按字节数从小到大划分，优先选择匹配数据范围的类型，避免内存浪费。</p>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th>数据类型</th>
+                <th>占用字节</th>
+                <th>存储范围</th>
+                <th>核心用途</th>
+            </tr>
+            <tr>
+                <td>byte</td>
+                <td>1字节</td>
+                <td>-128 ~ 127</td>
+                <td>字节流操作、数组内存优化（小范围整数）</td>
+            </tr>
+            <tr>
+                <td>short</td>
+                <td>2字节</td>
+                <td>-32768 ~ 32767</td>
+                <td>旧系统兼容、极少场景使用</td>
+            </tr>
+            <tr>
+                <td>int</td>
+                <td>4字节</td>
+                <td>-2147483648 ~ 2147483647</td>
+                <td>日常整数首选（年龄、数量、ID等）</td>
+            </tr>
+            <tr>
+                <td>long</td>
+                <td>8字节</td>
+                <td>-9223372036854775808 ~ 9223372036854775807</td>
+                <td>大范围整数（时间戳、大数值计数），赋值需加L后缀</td>
+            </tr>
+        </table>
+        <pre><code class="language-java">public class IntTypes {
+    public static void main(String[] args) {
+        byte b = 100;          // 不超过127，合法
+        // byte errB = 128;    // 错误：超出byte范围
+        int num = 99999;       // 日常整数首选int
+        long timestamp = 1718000000000L; // long赋值必须加L（推荐大写）
+        System.out.println("时间戳：" + timestamp);
+    }
+}</code></pre>
+
+        <h3>2. 浮点型（存储小数，含科学计数法）</h3>
+        <p>存储带小数的数值，存在精度误差（不可精确存储所有小数），优先使用double（Java默认浮点型）。</p>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <th数据类型</th>
+                <th>占用字节</th>
+                <th>精度（有效数字）</th>
+                <th>存储范围</th>
+                <th>核心用途</th>
+            </tr>
+            <tr>
+                <td>float</td>
+                <td>4字节</td>
+                <td>6~7位</td>
+                <td>3.4×10⁻³⁸ ~ 3.4×10³⁸</td>
+                <td>内存紧张场景（如大量浮点数组），赋值需加F后缀</td>
+            </tr>
+            <tr>
+                <td>double</td>
+                <td>8字节</td>
+                <td>15~16位</td>
+                <td>1.7×10⁻³⁰⁸ ~ 1.7×10³⁰⁸</td>
+                <td>日常小数首选（成绩、价格、长度等）</td>
+            </tr>
+        </table>
+        <pre><code class="language-java">public class FloatTypes {
+    public static void main(String[] args) {
+        float f = 3.14F;       // float赋值必须加F
+        double d1 = 98.5;      // 日常首选double（默认浮点型）
+        double d2 = 5.6e3;     // 科学计数法，对应5600.0
+        
+        // 注意：浮点型精度误差，不可直接比较相等
+        double a = 0.1 + 0.2;
+        System.out.println(a); // 输出0.30000000000000004（非0.3）
+    }
+}</code></pre>
+
+        <h3>3. 字符型（char）</h3>
+        <p>专门存储单个字符，支持中文、字母、符号、Unicode编码，本质存储Unicode码值（整数），可参与整型运算。</p>
+        <ul>
+            <li>占用字节：2字节</li>
+            <li>存储范围：0 ~ 65535（无负数，对应Unicode编码集）</li>
+            <li>语法规范：用单引号包裹单个字符，不可存多个字符</li>
+        </ul>
+        <pre><code class="language-java">public class CharType {
+    public static void main(String[] args) {
+        char c1 = 'A';         // 单个英文字母
+        char c2 = '国';        // 单个中文（原生支持Unicode）
+        char c3 = 97;          // Unicode码值，对应'a'
+        char c4 = '\n';        // 转义字符（换行）
+        
+        System.out.println("中文：" + c2);
+        System.out.println("'A'转整型：" + (int)c1); // 输出65
+        System.out.println("编码97对应字符：" + c3); // 输出a
+    }
+}</code></pre>
+
+        <h3>4. 布尔型（boolean）</h3>
+        <p>仅存储逻辑结果，无其他取值，是条件判断、循环控制的核心类型。</p>
+        <ul>
+            <li>占用字节：理论1字节（JVM优化后可能占用更少内存，无统一标准）</li>
+            <li>取值范围：仅true（真）、false（假）两种</li>
+            <li>核心用途：if条件判断、while循环控制、逻辑运算结果存储</li>
+        </ul>
+        <pre><code class="language-java">public class BooleanType {
+    public static void main(String[] args) {
+        boolean isPass = true;  // 表示"通过"
+        boolean isEmpty = false;// 表示"非空"
+        
+        int score = 85;
+        boolean canAward = score >= 90; // 条件运算结果，值为false
+        System.out.println("是否获奖：" + canAward);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>三、引用数据类型（入门核心）</h2>
+        <p>所有非基本数据类型均为引用类型，核心特点是「存储对象地址」，可赋值为null（表示无对象指向），入门阶段掌握4类常用类型即可满足基础开发。</p>
+        <ul>
+            <li>字符串型（String）：存储多个字符，最常用引用类型，用双引号包裹。</li>
+            <li>数组（Array）：批量存储同类型数据（基本/引用类型均可），需指定长度。</li>
+            <li>自定义类：根据业务需求定义的类（如Student、User），实例化后为对象。</li>
+            <li>常用工具类：JDK内置类（如ArrayList、Scanner，后续进阶学习）。</li>
+        </ul>
+
+        <h3>1. 字符串型（String）</h3>
+        <p>不可变字符串（创建后内容无法修改，修改本质是创建新对象），日常文本存储首选。</p>
+        <pre><code class="language-java">public class StringType {
+    public static void main(String[] args) {
+        String name = "张三";   // 普通字符串
+        String emptyStr = "";  // 空字符串（合法，长度为0）
+        String nullStr = null; // 无对象指向（不可直接调用方法）
+        
+        // 字符串拼接（+号直接拼接，简单常用）
+        String info = "姓名：" + name + "，年龄：20";
+        System.out.println(info); // 输出：姓名：张三，年龄：20
+    }
+}</code></pre>
+
+        <h3>2. 数组（Array）</h3>
+        <p>连续内存结构，批量存储同类型数据，长度固定，通过下标访问元素（下标从0开始）。</p>
+        <pre><code class="language-java">public class ArrayType {
+    public static void main(String[] args) {
+        // 1. 基本类型数组（存储int值）
+        int[] scoreArr = {90, 85, 95}; // 长度3，下标0~2
+        // 2. 引用类型数组（存储String地址）
+        String[] nameArr = {"张三", "李四", "王五"};
+        
+        System.out.println("数组长度：" + scoreArr.length); // 输出3
+        System.out.println("第2个成绩：" + scoreArr[1]);   // 输出85
+        System.out.println("第3个姓名：" + nameArr[2]);    // 输出王五
+    }
+}</code></pre>
+
+        <h3>3. 自定义类（入门示例）</h3>
+        <p>封装业务属性与行为，实例化后生成对象，对象为引用类型，存储对象地址。</p>
+        <pre><code class="language-java">// 自定义类（Student）
+class Student {
+    // 类的属性（成员变量）
+    String name;
+    int age;
+}
+
+// 测试类
+public class CustomType {
+    public static void main(String[] args) {
+        // 实例化对象（new关键字创建），stu为引用变量，存储对象地址
+        Student stu = new Student();
+        stu.name = "李四";
+        stu.age = 19;
+        
+        System.out.println("学生姓名：" + stu.name + "，年龄：" + stu.age);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>四、数据类型转换（核心实用技能）</h2>
+        <p>不同类型数据运算时需统一类型，分为「自动转换」（安全无精度丢失）和「强制转换」（可能丢失精度，需手动声明），遵循“小范围→大范围自动转，大范围→小范围强制转”规则。</p>
+
+        <h3>1. 自动转换（隐式转换）</h3>
+        <p>满足2个条件自动转换：① 类型兼容（如整型与浮点型兼容，字符型与整型兼容）；② 目标类型范围 > 源类型范围。</p>
+        <p>常用兼容转换顺序：byte → short → int → long → float → double（char可自动转int）</p>
+        <pre><code class="language-java">public class AutoConvert {
+    public static void main(String[] args) {
+        // 1. byte转int（小→大，自动）
+        byte b = 50;
+        int i = b;
+        System.out.println("byte转int：" + i);
+        
+        // 2. int转double（小→大，自动）
+        int num = 100;
+        double d = num;
+        System.out.println("int转double：" + d); // 输出100.0
+        
+        // 3. char转int（自动，本质是转Unicode码）
+        char c = 'A';
+        int code = c;
+        System.out.println("'A'转int：" + code); // 输出65
+    }
+}</code></pre>
+
+        <h3>2. 强制转换（显式转换）</h3>
+        <p>目标类型范围 < 源类型范围，需用语法：<code>目标类型 变量名 = (目标类型)源数据;</code>，可能丢失精度或溢出，需谨慎使用。</p>
+        <pre><code class="language-java">public class ForceConvert {
+    public static void main(String[] args) {
+        // 1. double转int（大→小，强制，丢失小数部分）
+        double d = 98.9;
+        int i = (int)d;
+        System.out.println("double转int：" + i); // 输出98（小数丢失）
+        
+        // 2. int转byte（大→小，强制，需确保值在byte范围内）
+        int num1 = 100;
+        byte b1 = (byte)num1;
+        System.out.println("int转byte（合法）：" + b1); // 输出100
+        
+        int num2 = 200; // 超出byte范围（-128~127）
+        byte b2 = (byte)num2;
+        System.out.println("int转byte（溢出）：" + b2); // 输出-56（乱码值）
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>五、数据类型使用最佳实践（避坑规范）</h2>
+        <ul>
+            <li>类型匹配优先：根据数据实际范围选类型（如年龄用int，不用long；小范围整数用byte，优化内存），避免“大类型存小数据”浪费内存。</li>
+            <li>浮点型避坑：不可用==直接比较浮点型相等（精度误差），需通过差值绝对值判断（如Math.abs(a-b) < 1e-6）。</li>
+            <li>long/float赋值规范：long变量赋值必须加L后缀，float必须加F后缀，避免编译器误判为int/double。</li>
+            <li>引用类型防空：引用变量使用前需判断是否为null，避免NullPointerException（空指针异常）。</li>
+            <li>强制转换谨慎：仅确认源数据在目标类型范围内时使用强制转换，否则会出现溢出或精度丢失。</li>
+        </ul>
+        <pre><code class="language-java">public class TypeRule {
+    public static void main(String[] args) {
+        // 1. 浮点型比较正确方式
+        double a = 0.1 + 0.2;
+        double b = 0.3;
+        boolean isEqual = Math.abs(a - b) < 1e-6;
+        System.out.println("浮点型是否相等：" + isEqual); // 输出true
+        
+        // 2. 引用类型判空
+        String str = null;
+        if (str != null) {
+            System.out.println(str.length());
+        } else {
+            System.out.println("字符串为null，不可调用方法");
+        }
+    }
+}</code></pre>
+    </section>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

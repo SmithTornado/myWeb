@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java选择结构</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Java选择结构</h1>
+    <p>选择结构是Java流程控制的核心结构之一，核心逻辑是<span style="color:#f56c6c">根据条件真假选择执行不同代码块</span>，打破顺序结构的线性执行规则，实现“分支化”逻辑。Java中常用2类选择结构：<code>if-else</code>（适配范围/多条件判断）、<code>switch</code>（适配多值精确匹配）。</p>
+
+    <section>
+        <h2>一、if-else选择结构（万能适配，优先掌握）</h2>
+        <p>通过布尔条件判断执行分支，条件为<code>true</code>执行对应代码块，为<code>false</code>执行其他分支，支持单分支、双分支、多分支及嵌套，适配绝大多数判断场景。</p>
+
+        <h3>1. 单if结构（单分支）</h3>
+        <p>仅当条件成立时执行代码块，条件不成立则跳过，无后续分支。</p>
+        <h4>语法格式</h4>
+        <pre><code class="language-java">if (布尔条件表达式) {
+    // 条件为true时执行的代码块（语句需用{}包裹，单句可省略，但不推荐）
+}</code></pre>
+        <h4>实战示例：判断是否及格</h4>
+        <pre><code class="language-java">public class IfSingle {
+    public static void main(String[] args) {
+        int score = 85;
+        // 条件：分数>=60为true，执行打印语句
+        if (score >= 60) {
+            System.out.println("成绩及格，继续加油！");
+        }
+        // 条件不成立时，直接执行此行（无分支代码）
+        System.out.println("成绩查询完毕");
+    }
+}</code></pre>
+
+        <h3>2. if-else结构（双分支）</h3>
+        <p>条件成立执行if代码块，不成立执行else代码块，二选一必执行其一。</p>
+        <h4>语法格式</h4>
+        <pre><code class="language-java">if (布尔条件表达式) {
+    // 条件为true时执行的代码块
+} else {
+    // 条件为false时执行的代码块
+}</code></pre>
+        <h4>实战示例：判断奇偶性</h4>
+        <pre><code class="language-java">public class IfElse {
+    public static void main(String[] args) {
+        int num = 17;
+        // 条件：num%2==0（能被2整除为偶数）
+        if (num % 2 == 0) {
+            System.out.println(num + "是偶数");
+        } else {
+            System.out.println(num + "是奇数");
+        }
+    }
+}</code></pre>
+
+        <h3>3. if-else if-else结构（多分支）</h3>
+        <p>多条件依次判断，满足首个条件则执行对应分支，后续条件不再判断；所有条件均不满足则执行else分支，最多执行一个分支。</p>
+        <h4>语法格式</h4>
+        <pre><code class="language-java">if (条件1) {
+    // 条件1为true时执行
+} else if (条件2) {
+    // 条件1为false、条件2为true时执行
+} else if (条件3) {
+    // 前两个条件为false、条件3为true时执行
+} ... {
+    // 更多分支
+} else {
+    // 所有条件均为false时执行（可选，推荐添加）
+}</code></pre>
+        <h4>实战示例：成绩等级判断</h4>
+        <pre><code class="language-java">public class IfElseIfElse {
+    public static void main(String[] args) {
+        int score = 92;
+        // 多条件依次判断，满足即执行对应分支
+        if (score >= 90 && score <= 100) {
+            System.out.println("成绩等级：优秀");
+        } else if (score >= 80 && score < 90) {
+            System.out.println("成绩等级：良好");
+        } else if (score >= 60 && score < 80) {
+            System.out.println("成绩等级：合格");
+        } else if (score >= 0 && score < 60) {
+            System.out.println("成绩等级：不及格");
+        } else {
+            System.out.println("成绩输入错误，需在0-100之间");
+        }
+    }
+}</code></pre>
+
+        <h3>4. if-else嵌套结构（分支内套分支）</h3>
+        <p>在if/else代码块中嵌套另一个if-else结构，适配复杂多层判断，建议嵌套不超过2层（避免可读性下降）。</p>
+        <h4>实战示例：嵌套判断成绩与性别</h4>
+        <pre><code class="language-java">public class IfNested {
+    public static void main(String[] args) {
+        int score = 88;
+        char gender = '女';
+        
+        // 外层判断：是否及格
+        if (score >= 60) {
+            System.out.println("成绩及格");
+            // 内层嵌套：及格前提下判断性别
+            if (gender == '男') {
+                System.out.println("男生，继续保持！");
+            } else if (gender == '女') {
+                System.out.println("女生，表现优秀！");
+            }
+        } else {
+            System.out.println("成绩不及格，需补考");
+        }
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>二、switch选择结构（多值精确匹配）</h2>
+        <p>通过“表达式结果”与多个<code>case</code>值精确匹配，执行对应分支，适配“固定多值选择”场景（如月份、菜单、等级匹配），语法简洁。</p>
+
+        <h3>1. 核心语法格式</h3>
+        <pre><code class="language-java">switch (表达式) {
+    case 值1:
+        // 表达式结果 == 值1时执行的代码
+        break; // 终止switch，避免分支穿透（核心，不可漏）
+    case 值2:
+        // 表达式结果 == 值2时执行的代码
+        break;
+    ... // 更多case分支
+    default:
+        // 表达式结果与所有case值不匹配时执行（可选，推荐添加）
+        break;
+}</code></pre>
+        <h4>关键规则</h4>
+        <ul>
+            <li>表达式类型限制：仅支持<code>byte、short、int、char、String、枚举</code>（JDK7+支持String），不可为boolean、float、double。</li>
+            <li>case值要求：必须是常量/字面量（如10、"A"），不可为变量，且值不可重复。</li>
+            <li>break作用：执行完对应case代码后，终止switch流程；缺失则触发“分支穿透”（继续执行下一个case代码，不判断值）。</li>
+            <li>default位置：可放在任意位置，无匹配值时执行；放在末尾可省略break，其他位置需加break。</li>
+        </ul>
+
+        <h3>2. 实战示例1：成绩等级匹配（单值匹配）</h3>
+        <pre><code class="language-java">public class SwitchBasic {
+    public static void main(String[] args) {
+        char grade = 'B';
+        // 表达式为char类型，case值为字符常量
+        switch (grade) {
+            case 'A':
+                System.out.println("优秀");
+                break; // 终止流程，避免穿透
+            case 'B':
+                System.out.println("良好");
+                break;
+            case 'C':
+                System.out.println("合格");
+                break;
+            case 'D':
+                System.out.println("不及格");
+                break;
+            default:
+                System.out.println("等级输入错误");
+                break;
+        }
+    }
+}</code></pre>
+
+        <h3>3. 实战示例2：分支穿透（多值共用逻辑）</h3>
+        <p>刻意省略break，实现多个case共用同一代码块（如判断月份对应季节）。</p>
+        <pre><code class="language-java">public class SwitchPenetration {
+    public static void main(String[] args) {
+        int month = 3;
+        switch (month) {
+            case 3:
+            case 4:
+            case 5: // 3、4、5月共用“春季”逻辑（穿透特性）
+                System.out.println(month + "月是春季");
+                break;
+            case 6:
+            case 7:
+            case 8:
+                System.out.println(month + "月是夏季");
+                break;
+            case 9:
+            case 10:
+            case 11:
+                System.out.println(month + "月是秋季");
+                break;
+            case 12:
+            case 1:
+            case 2:
+                System.out.println(month + "月是冬季");
+                break;
+            default:
+                System.out.println("月份输入错误（1-12）");
+                break;
+        }
+    }
+}</code></pre>
+
+        <h3>4. 实战示例3：String类型匹配（JDK7+支持）</h3>
+        <pre><code class="language-java">public class SwitchString {
+    public static void main(String[] args) {
+        String menu = "查询";
+        // 表达式为String类型，case值为字符串常量
+        switch (menu) {
+            case "登录":
+                System.out.println("执行登录逻辑");
+                break;
+            case "查询":
+                System.out.println("执行数据查询逻辑");
+                break;
+            case "退出":
+                System.out.println("执行退出程序逻辑");
+                break;
+            default:
+                System.out.println("菜单不存在");
+                break;
+        }
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>三、if-else与switch对比（选型指南）</h2>
+        <table border="1" cellpadding="8" cellspacing="0" style="width:100%;border-collapse:collapse;margin:10px 0;">
+            <tr style="background:#f5f5f5;">
+                <<th>对比维度</</th>
+                <<th>if-else结构</</th>
+                <<th>switch结构</</th>
+            </tr>
+            <tr>
+                <td>适配场景</td>
+                <td>范围判断（如score>=60）、多条件复杂判断</td>
+                <td>多值精确匹配（如月份、等级、菜单）</td>
+            </tr>
+            <tr>
+                <td>表达式类型</td>
+                <td>仅布尔值（条件表达式结果）</td>
+                <td>byte、short、int、char、String、枚举</td>
+            </tr>
+            <tr>
+                <td>可读性</td>
+                <td>条件少清晰，条件多（>3个）易冗余</td>
+                <td>多值匹配时更简洁，结构固定</td>
+            </tr>
+            <tr>
+                <td>执行效率</td>
+                <td>依次判断，条件越靠后效率越低</td>
+                <td>底层为哈希表/跳转表，匹配效率稳定</td>
+            </tr>
+        </table>
+        <p><strong>选型原则</strong>：3个及以上固定值精确匹配用switch，范围判断或复杂条件用if-else。</p>
+    </section>
+
+    <section>
+        <h2>四、选择结构注意事项（避坑关键）</h2>
+        <ul>
+            <li>if条件必须是布尔值：不可写数值型表达式（如<code>if(5)</code>报错，需写<code>if(5>0)</code>）。</li>
+            <li>代码块{}规范：单句代码也推荐加{}（避免后续加代码时逻辑错乱，如if后换行加语句未加{}，会脱离分支控制）。</li>
+            <li>switch穿透不可漏break：非刻意共用逻辑时，每个case末尾必须加break，否则会执行后续所有case代码。</li>
+            <li>switch case值不可重复：重复会编译报错，case值必须是常量（不可用变量，如<code>case num:</code>报错）。</li>
+            <li>嵌套if不超2层：过度嵌套（如3层及以上）可读性极差，可拆分为变量或方法优化。</li>
+            <li>else/else if顺序：多条件判断时，范围小的条件放前面（如判断成绩时先判断90+，再判断80+，否则大范围条件会覆盖小范围）。</li>
+        </ul>
+        <pre><code class="language-java">public class SelectRule {
+    public static void main(String[] args) {
+        // 错误1：if条件为数值（报错）
+        // if (10) {}
+        if (10 > 5) {} // 正确：布尔条件
+        
+        // 错误2：switch case值重复（报错）
+        int a = 2;
+        switch (a) {
+            case 1:
+                break;
+            // case 1: break; // 重复报错
+        }
+        
+        // 错误3：条件顺序错误（85会被>=60覆盖，永远走不到>=80分支）
+        int score = 85;
+        if (score >= 60) {
+            System.out.println("合格");
+        } else if (score >= 80) {
+            System.out.println("良好");
+        }
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>五、选择结构最佳实践</h2>
+        <ul>
+            <li>代码缩进统一：分支内代码缩进4空格，结构清晰，便于区分分支范围。</li>
+            <li>条件表达式简洁：复杂条件拆分为变量（如<code>boolean isAdult = age >= 18;</code>，再写<code>if(isAdult)</code>）。</li>
+            <li>default必加兜底：switch和if-else if结构均添加default/else分支，处理异常输入（如无效成绩、错误月份）。</li>
+            <li>避免冗余判断：条件可合并时优先合并（如<code>if(a>5 && a<10)</code>，不写两个独立if）。</li>
+            <li>switch优先用String/枚举：多值匹配时，String比int更直观（如菜单用“查询”比用1更易理解）。</li>
+        </ul>
+        <pre><code class="language-java">public class SelectBestPractice {
+    public static void main(String[] args) {
+        int age = 22;
+        // 最佳实践1：复杂条件拆分为变量
+        boolean isAdult = age >= 18;
+        boolean isYoung = age >= 18 && age <= 30;
+        if (isYoung) {
+            System.out.println("青年");
+        } else if (isAdult) {
+            System.out.println("成年");
+        } else {
+            System.out.println("未成年"); // 兜底else
+        }
+        
+        // 最佳实践2：switch加default，值直观
+        String season = "春季";
+        switch (season) {
+            case "春季":
+                System.out.println("3-5月");
+                break;
+            case "夏季":
+                System.out.println("6-8月");
+                break;
+            default:
+                System.out.println("季节输入错误"); // 兜底default
+                break;
+        }
+    }
+}</code></pre>
+    </section>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

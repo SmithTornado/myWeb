@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>C语言数据类型</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>C语言数据类型</h1>
+    <p>数据类型是C语言的核心基础，用于定义变量、常量的存储格式、占用内存大小及可执行操作，决定了数据的存储方式与使用规则。C语言数据类型主要分为四大类，以下是详细介绍。</p>
+
+    <h2>一、基本数据类型</h2>
+    <p>基本数据类型为不可拆分的基础类型，直接存储单一形态数据，是最常用的数据类型，主要包含整型、浮点型、字符型。</p>
+
+    <h3>1. 整型</h3>
+    <p>用于存储无小数部分的整数，支持有符号（默认，可存储正负整数）和无符号（仅存储非负数）修饰，不同类型内存占用与取值范围不同，32位系统下常用类型如下：</p>
+    <ul>
+        <li>short：短整型，占用2字节，取值范围-32768~32767，格式符%hd</li>
+        <li>int：基本整型，占用4字节，取值范围-2147483648~2147483647，格式符%d，日常开发首选</li>
+        <li>long：长整型，32位系统占用4字节，64位系统占用8字节，格式符%ld</li>
+        <li>long long：超长整型，占用8字节，取值范围-9223372036854775808~9223372036854775807，格式符%lld</li>
+        <li>unsigned int：无符号整型，占用4字节，取值范围0~4294967295，格式符%u</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    short s_num = 100;          // 短整型变量定义与初始化
+    int i_age = 22;             // 基本整型变量
+    long l_count = 123456;      // 长整型变量
+    long long ll_big = 123456789012; // 超长整型变量
+    unsigned int u_score = 98;  // 无符号整型变量
+
+    printf("短整型：%hd\n", s_num);
+    printf("基本整型：%d\n", i_age);
+    printf("长整型：%ld\n", l_count);
+    printf("超长整型：%lld\n", ll_big);
+    printf("无符号整型：%u\n", u_score);
+    return 0;
+}</code></pre>
+
+    <h3>2. 浮点型</h3>
+    <p>用于存储带小数的实数，按精度分为单精度、双精度、长双精度，精度越高内存占用越大，默认小数为双精度类型。</p>
+    <ul>
+        <li>float：单精度浮点型，占用4字节，有效数字6~7位，格式符%f，初始化需加后缀f</li>
+        <li>double：双精度浮点型，占用8字节，有效数字15~16位，格式符%lf，日常开发首选</li>
+        <li>long double：长双精度浮点型，占用16字节，有效数字19~20位，格式符%Lf</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    float f_pi = 3.14159f;      // 单精度浮点型，后缀f不可省略
+    double d_gravity = 9.80665; // 双精度浮点型
+    long double ld_e = 2.718281828; // 长双精度浮点型
+
+    printf("单精度圆周率：%.2f\n", f_pi); // 保留2位小数
+    printf("双精度重力加速度：%.4lf\n", d_gravity); // 保留4位小数
+    printf("长双精度自然常数：%.6Lf\n", ld_e); // 保留6位小数
+    return 0;
+}</code></pre>
+
+    <h3>3. 字符型</h3>
+    <p>用于存储单个字符，本质是1字节的小整型，存储字符对应的ASCII码值，字符用单引号包裹，格式符%c（输出字符）、%d（输出ASCII码）。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    char c_ch = 'A';            // 存储单个字符
+    char c_ascii = 97;          // 存储ASCII码（97对应小写a）
+
+    printf("字符：%c\n", c_ch);
+    printf("'A'的ASCII码：%d\n", c_ch); // 输出A的ASCII码65
+    printf("ASCII码97对应字符：%c\n", c_ascii); // 输出a
+    return 0;
+}</code></pre>
+
+    <h2>二、构造数据类型</h2>
+    <p>由基本数据类型或其他构造类型组合而成，用于存储复杂关联数据，常用类型有数组、结构体、共用体。</p>
+
+    <h3>1. 数组</h3>
+    <p>存储相同类型的连续数据集合，定义格式：类型 数组名[长度];，下标从0开始，长度为常量。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int arr1[5] = {1, 2, 3, 4, 5}; // 整型数组，完整初始化
+    int arr2[5] = {1, 2};          // 部分初始化，剩余元素默认为0
+    char arr3[] = "hello";         // 字符数组，自动添加'\0'结尾
+
+    // 遍历整型数组
+    printf("整型数组arr1：");
+    for (int i = 0; i &lt; 5; i++) {
+        printf("%d ", arr1[i]);
+    }
+    printf("\n字符数组arr3：%s\n", arr3);
+    return 0;
+}</code></pre>
+
+    <h3>2. 结构体</h3>
+    <p>存储不同类型的关联数据集合，先定义结构体类型，再定义变量，通过.访问成员。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 定义结构体类型
+struct Student {
+    char name[20];  // 姓名
+    int age;        // 年龄
+    float score;    // 分数
+};
+
+int main() {
+    // 定义结构体变量并初始化
+    struct Student stu = {"张三", 20, 95.5};
+    // 访问结构体成员
+    printf("姓名：%s\n", stu.name);
+    printf("年龄：%d\n", stu.age);
+    printf("分数：%.1f\n", stu.score);
+    // 修改成员值
+    stu.age = 21;
+    printf("修改后年龄：%d\n", stu.age);
+    return 0;
+}</code></pre>
+
+    <h3>3. 共用体</h3>
+    <p>所有成员共用一块内存空间，同一时间仅能存储一个成员值，内存大小为最大成员占用字节数。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// 定义共用体类型
+union Data {
+    int i;
+    float f;
+    char c;
+};
+
+int main() {
+    union Data data;
+    data.i = 100;
+    printf("整型值：%d\n", data.i);
+
+    data.f = 3.14; // 覆盖之前的整型值
+    printf("浮点值：%.2f\n", data.f);
+
+    data.c = 'A'; // 覆盖之前的浮点值
+    printf("字符值：%c\n", data.c);
+    return 0;
+}</code></pre>
+
+    <h2>三、指针数据类型</h2>
+    <p>存储变量内存地址的变量，通过指针可间接访问和修改变量值，定义格式：类型 *指针名;，&取变量地址，*解引用访问指针指向的值。</p>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+int main() {
+    int a = 10;
+    int *p = &amp;a; // 定义指针p，指向变量a的地址
+
+    printf("变量a的值：%d\n", a);
+    printf("变量a的地址：%p\n", &a);
+    printf("指针p存储的地址：%p\n", p);
+    printf("指针访问a的值：%d\n", *p);
+
+    *p = 20; // 通过指针修改a的值
+    printf("修改后a的值：%d\n", a);
+    return 0;
+}</code></pre>
+
+    <h2>四、空类型</h2>
+    <p>无具体存储含义，仅用于限定特定场景，关键字为void，主要用途：</p>
+    <ul>
+        <li>函数返回值：表示函数无返回值</li>
+        <li>函数参数：表示函数无参数</li>
+        <li>空指针：指向未知类型的指针，需强制转换后使用</li>
+    </ul>
+    <pre><code class="language-c">#include &lt;stdio.h&gt;
+// void作为函数返回值，无返回值
+void printInfo() {
+    printf("C语言空类型用法\n");
+}
+
+// void作为函数参数，无参数
+int main(void) {
+    printInfo();
+
+    // 空指针定义与使用
+    int b = 20;
+    void *vp = &amp;b;
+    printf("空指针访问b的值：%d\n", *(int *)vp); // 强制转换为int*
+    return 0;
+}</code></pre>
+</body>
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</html>

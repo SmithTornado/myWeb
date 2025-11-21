@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java变量</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Java变量</h1>
+    <p>变量是Java中<span style="color:#f56c6c">用于临时存储数据的内存容器</span>，Java是强类型语言，变量声明时必须指定数据类型，类型一旦确定不可更改，其值可在合法范围内动态修改，是程序承载数据、实现逻辑运算的核心载体。</p>
+
+    <section>
+        <h2>一、变量核心特性（Java强类型专属）</h2>
+        <p>Java变量遵循「强类型约束」，核心特性决定使用规则，区别于弱类型语言，需重点掌握：</p>
+        <ul>
+            <li>类型固定：声明时指定数据类型，后续仅能存储对应类型数据（如int变量不可存字符串），类型不兼容编译报错。</li>
+            <li>先声明后使用：必须先完成变量声明（或初始化），否则无法访问，编译直接拦截。</li>
+            <li>内存自动管理：变量生命周期结束后，JVM自动回收内存，无需手动释放，避免内存泄漏。</li>
+        </ul>
+        <pre><code class="language-java">public class VariableFeature {
+    public static void main(String[] args) {
+        // 1. 声明并初始化int型变量，仅能存整数
+        int num = 10;
+        // num = "hello"; // 错误：类型不兼容，编译报错
+        
+        // 2. 先声明后赋值，使用前必须完成赋值
+        String name;
+        name = "Java变量";
+        System.out.println(name); // 合法：使用前已赋值
+        
+        // 3. 未声明直接使用，编译报错
+        // System.out.println(age);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>二、Java常用数据类型（核心分类）</h2>
+        <p>Java数据类型分「基本数据类型」（8种，存储原始值）和「引用数据类型」（存储内存地址），日常开发优先掌握基础类型，引用类型入门核心常用类即可。</p>
+
+        <h3>1. 基本数据类型（8种，必掌握）</h3>
+        <p>直接存储原始数据，占用内存固定，按用途分4大类，无需手动创建对象，使用简单。</p>
+        
+        <h4>（1）整型（存储整数，无小数）</h4>
+        <p>适配不同范围整数，优先使用int（日常通用）、long（大范围时加L后缀）。</p>
+        <ul>
+            <li>byte：1字节，范围-128~127，多用于字节流、数组优化。</li>
+            <li>short：2字节，范围-32768~32767，少用，适配旧系统兼容场景。</li>
+            <li>int：4字节，范围-2147483648~2147483647，日常开发首选。</li>
+            <li>long：8字节，范围-9223372036854775808~9223372036854775807，赋值需加L后缀（区分int）。</li>
+        </ul>
+        <pre><code class="language-java">public class IntType {
+    public static void main(String[] args) {
+        byte b = 100;          // 字节型（不超-128~127）
+        short s = 2000;        // 短整型
+        int i = 100000;        // 整型（日常首选）
+        long l = 1234567890L;  // 长整型，必须加L（大小写均可，推荐大写）
+        
+        System.out.println("byte：" + b);
+        System.out.println("long：" + l);
+    }
+}</code></pre>
+
+        <h4>（2）浮点型（存储小数，含科学计数法）</h4>
+        <p>优先使用double（精度更高、范围更广，Java默认浮点型是double），float需加F后缀。</p>
+        <ul>
+            <li>float：4字节，精度6~7位有效数字，赋值加F后缀，少用（精度不足）。</li>
+            <li>double：8字节，精度15~16位有效数字，日常开发首选，默认浮点型。</li>
+        </ul>
+        <pre><code class="language-java">public class FloatType {
+    public static void main(String[] args) {
+        float f = 3.14F;       // 单精度浮点型，必须加F
+        double d1 = 95.5;      // 双精度浮点型（日常首选）
+        double d2 = 1.23e4;    // 科学计数法，对应12300.0
+        
+        System.out.println("float：" + f);
+        System.out.println("科学计数法：" + d2);
+    }
+}</code></pre>
+
+        <h4>（3）字符型（存储单个字符/Unicode编码）</h4>
+        <p>占2字节，支持中文、字母、符号，用单引号包裹，本质存储Unicode编码值（可转整型）。</p>
+        <pre><code class="language-java">public class CharType {
+    public static void main(String[] args) {
+        char c1 = 'A';         // 单个字母
+        char c2 = '中';        // 单个中文（Java原生支持Unicode）
+        char c3 = 66;          // Unicode编码，对应'B'
+        
+        System.out.println("中文：" + c2);
+        System.out.println("编码对应字符：" + c3);
+        System.out.println("'A'的编码：" + (int)c1); // 转整型输出65
+    }
+}</code></pre>
+
+        <h4>（4）布尔型（存储逻辑值，仅2种结果）</h4>
+        <p>占1字节（JVM优化后可能更小），仅存true（真）/false（假），无其他取值，多用于条件判断。</p>
+        <pre><code class="language-java">public class BooleanType {
+    public static void main(String[] args) {
+        boolean flag1 = true;  // 逻辑真
+        boolean flag2 = false; // 逻辑假
+        
+        int num = 10;
+        boolean flag3 = num > 5; // 条件判断结果，值为true
+        
+        System.out.println("flag3：" + flag3);
+    }
+}</code></pre>
+
+        <h3>2. 引用数据类型（入门常用）</h3>
+        <p>存储对象的内存地址，而非原始数据，常用入门类型：String（字符串）、数组、自定义类，核心特点是可赋值为null（表示无对象指向）。</p>
+        <pre><code class="language-java">public class ReferenceType {
+    public static void main(String[] args) {
+        // 1. String字符串：双引号包裹，可存多个字符（最常用引用类型）
+        String name = "Java编程";
+        String empty = "";     // 空字符串（合法）
+        String nullStr = null; // 无指向（不可直接调用方法，否则报错）
+        
+        // 2. 数组引用（后续数组章节详解）
+        int[] arr = {1,2,3};
+        
+        System.out.println("字符串：" + name);
+        System.out.println("数组长度：" + arr.length);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>三、变量的声明与初始化（规范用法）</h2>
+        <p>Java变量严格遵循「先声明、再初始化、后使用」，未初始化的局部变量无法使用，成员变量有默认初始化值，避免垃圾值问题。</p>
+
+        <h3>1. 变量声明语法</h3>
+        <p>基础语法：<code>数据类型 变量名;</code>（单个声明）、<code>数据类型 变量名1, 变量名2;</code>（同类型多变量，推荐分行声明）。</p>
+        <pre><code class="language-java">public class VariableDeclare {
+    public static void main(String[] args) {
+        // 1. 单个变量声明（推荐，可读性强）
+        int age;
+        String gender;
+        double score;
+        
+        // 2. 同类型多变量声明（不推荐密集写法）
+        int a, b, c;
+    }
+}</code></pre>
+
+        <h3>2. 变量初始化（3种标准方式）</h3>
+        <p>初始化是给变量赋初始值，避免使用异常，优先推荐「声明时初始化」，局部变量必须手动初始化，成员变量有默认值。</p>
+        <pre><code class="language-java">public class VariableInit {
+    // 成员变量：类内方法外，有默认初始化值（无需手动赋）
+    static int m;         // 默认0
+    static double n;      // 默认0.0
+    static boolean p;     // 默认false
+    static String q;      // 默认null
+    
+    public static void main(String[] args) {
+        // 方式1：声明时初始化（最佳实践）
+        int num1 = 20;
+        String name = "张三";
+        
+        // 方式2：声明后单独初始化（局部变量必须用前赋）
+        int num2;
+        num2 = 30;
+        
+        // 方式3：表达式初始化（值由运算结果决定）
+        int num3 = 10 + 20;
+        double num4 = 3.14 * 2;
+        
+        // 局部变量未初始化，编译报错
+        // int err;
+        // System.out.println(err);
+        
+        // 打印成员变量默认值
+        System.out.println("成员变量默认值：" + m + "," + q);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>四、变量的作用域（生命周期与访问范围）</h2>
+        <p>作用域是变量的「有效访问范围」，超出范围变量失效（生命周期结束），核心分3类，决定变量的使用场景。</p>
+
+        <h3>1. 局部变量（方法/代码块内）</h3>
+        <p>定义位置：方法、循环、if块等局部区域内；作用域：仅当前局部区域；生命周期：方法执行开始创建，执行结束销毁；要求：必须手动初始化，无默认值。</p>
+        <pre><code class="language-java">public class LocalVariable {
+    public static void main(String[] args) {
+        // 局部变量：main方法内，仅main中可用
+        int num = 100;
+        System.out.println(num);
+        
+        // 循环内局部变量：仅循环内可用
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i);
+        }
+        // System.out.println(i); // 错误：超出循环作用域
+    }
+}</code></pre>
+
+        <h3>2. 成员变量（实例变量，类内方法外）</h3>
+        <p>定义位置：类内、方法外，无static修饰；作用域：整个类；生命周期：对象创建时创建，对象销毁时销毁；要求：有默认初始化值，需通过对象调用。</p>
+        <pre><code class="language-java">public class MemberVariable {
+    // 成员变量：无static，对象级
+    String name;
+    int age;
+    
+    public static void main(String[] args) {
+        // 成员变量需创建对象调用
+        MemberVariable obj = new MemberVariable();
+        obj.name = "李四";
+        obj.age = 25;
+        System.out.println(obj.name + "," + obj.age);
+    }
+}</code></pre>
+
+        <h3>3. 静态变量（类变量，static修饰）</h3>
+        <p>定义位置：类内、方法外，加static修饰；作用域：整个类，全局共享；生命周期：程序启动时创建，程序结束时销毁；要求：有默认初始化值，直接通过类名调用（推荐）。</p>
+        <pre><code class="language-java">public class StaticVariable {
+    // 静态变量：static修饰，类级，全局共享
+    static String school = "XX大学";
+    static int classNum = 3;
+    
+    public static void main(String[] args) {
+        // 方式1：类名调用（最佳实践）
+        System.out.println(StaticVariable.school);
+        
+        // 方式2：对象调用（不推荐）
+        StaticVariable obj = new StaticVariable();
+        System.out.println(obj.classNum);
+        
+        // 静态变量全局共享，修改后所有地方生效
+        StaticVariable.school = "YY大学";
+        System.out.println(school); // 直接访问（当前类内可省略类名）
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>五、变量使用最佳实践（规范避坑）</h2>
+        <ul>
+            <li>命名规范：遵循小驼峰命名法（首字母小写，多单词后续首字母大写），如<code>studentName</code>、<code>mathScore</code>，见名知意，不使用关键字（如int、class）。</li>
+            <li>类型适配：根据数据范围选对应类型（如小范围整数用byte，不用int；小数优先用double，不用float），避免内存浪费。</li>
+            <li>作用域最小化：变量仅在需要的范围定义（如循环计数变量在循环内定义），减少全局变量使用，降低耦合。</li>
+            <li>避免未初始化：局部变量必须手动初始化，成员变量按需显式初始化（不依赖默认值，可读性更强）。</li>
+            <li>不重复定义：同一作用域内，变量名不可重复（如同一方法内不能定义2个int num），不同作用域可重名（局部变量优先）。</li>
+        </ul>
+        <pre><code class="language-java">public class VariableRule {
+    // 静态变量命名：小驼峰，见名知意
+    static double maxScore = 100.0;
+    
+    public static void main(String[] args) {
+        // 局部变量命名规范，类型适配（年龄用int，成绩用double）
+        int studentAge = 18;
+        double englishScore = 92.5;
+        
+        // 作用域最小化：循环变量i仅循环内可用
+        for (int i = 0; i < 5; i++) {
+            System.out.println("循环次数：" + (i+1));
+        }
+    }
+}</code></pre>
+    </section>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>

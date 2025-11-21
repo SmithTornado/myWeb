@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java表达式</title>
+    <link rel="stylesheet" href="../../../highlight/styles/arta.min.css">
+    <link rel="stylesheet" href="../../../css/article-common.css">
+</head>
+<body>
+    <h1>Java表达式</h1>
+    <p>Java表达式是由<span style="color:#f56c6c">操作数、运算符及可选方法调用组成的语法结构</span>，核心特性是执行后必然返回一个确定值，可直接参与运算、赋值或条件判断，是Java程序实现数据处理与逻辑计算的基础单元。</p>
+
+    <section>
+        <h2>一、表达式核心特性（必掌握）</h2>
+        <p>所有Java表达式均满足以下核心规则，是区分表达式与其他语法结构的关键：</p>
+        <ul>
+            <li>必有返回值：执行后生成唯一结果，结果类型由表达式内操作数、运算符共同决定（如算术表达式返回数值，比较表达式返回布尔值）。</li>
+            <li>组成要素：核心是「操作数」（变量、常量、方法返回值等）和「运算符」，二者搭配构成完整表达式。</li>
+            <li>支持嵌套：一个表达式的结果可作为另一个表达式的操作数，实现复杂逻辑计算。</li>
+            <li>类型兼容：操作数类型需与运算符匹配（如逻辑运算符仅接收布尔值操作数），否则编译报错。</li>
+        </ul>
+        <pre><code class="language-java">public class ExpressionFeature {
+    public static void main(String[] args) {
+        int a = 10, b = 3;
+        // 1. 算术表达式：10+3是表达式，返回13，赋值给sum
+        int sum = a + b;
+        // 2. 嵌套表达式：(a*2)和(b+5)是子表达式，结果作为外层表达式操作数
+        int nestedRes = (a * 2) - (b + 5);
+        System.out.println("嵌套表达式结果：" + nestedRes); // 20-8=12
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>二、Java常用表达式分类（按功能划分）</h2>
+        <p>按核心功能可分为7大类，日常开发优先掌握前6类高频表达式，位表达式多用于底层场景，入门阶段了解基础用法即可。</p>
+
+        <h3>1. 算术表达式（数值计算核心）</h3>
+        <p>由算术运算符（+、-、*、/、%、++、--）和数值型操作数组成，返回数值类型结果（int、double等），核心用于数值计算。</p>
+        <h4>核心语法与示例</h4>
+        <pre><code class="language-java">public class ArithmeticExpression {
+    public static void main(String[] args) {
+        int num1 = 15, num2 = 4;
+        double num3 = 15.0, num4 = 4.0;
+        
+        // 基础算术表达式
+        int add = num1 + num2;       // 加法表达式，返回19
+        int sub = num1 - num2;       // 减法表达式，返回11
+        int mul = num1 * num2;       // 乘法表达式，返回60
+        int divInt = num1 / num2;    // 整数除法表达式，返回3（取整）
+        double divDouble = num3 / num4; // 浮点数除法表达式，返回3.75
+        int mod = num1 % num2;       // 模运算表达式，返回3（取余）
+        
+        // 含自增自减的算术表达式
+        int inc = num1++;            // 后置自增，表达式返回15，num1最终16
+        int dec = --num2;            // 前置自减，表达式返回3，num2最终3
+        
+        System.out.println("整数除法：" + divInt);
+        System.out.println("浮点数除法：" + divDouble);
+        System.out.println("后置自增表达式结果：" + inc);
+    }
+}</code></pre>
+        <h4>关键注意事项</h4>
+        <ul>
+            <li>整数除法仅保留整数部分，需保留小数时需将操作数转为浮点数（如15.0/4而非15/4）。</li>
+            <li>自增自减表达式有副作用：执行时会修改操作数本身的值，嵌套使用易出错（如num1++ + ++num1）。</li>
+            <li>混合类型运算会自动触发类型提升，结果类型为范围更大的类型（如int+double返回double）。</li>
+        </ul>
+
+        <h3>2. 赋值表达式（变量赋值核心）</h3>
+        <p>由赋值运算符（=、+=、-=等）组成，左侧为变量，右侧为任意合法表达式，核心功能是给变量赋值，<strong>返回值为赋值后变量的最终值</strong>。</p>
+        <h4>核心语法与示例</h4>
+        <pre><code class="language-java">public class AssignExpression {
+    public static void main(String[] args) {
+        int a = 5, b = 3;
+        
+        // 基本赋值表达式：返回赋值后的值（10）
+        int basicAssign = (a = 10);
+        System.out.println("基本赋值表达式结果：" + basicAssign); // 10
+        
+        // 复合赋值表达式：返回赋值后的值
+        int addAssign = (b += 2);  // 等价b = b+2，返回5
+        int mulAssign = (a *= 3);  // 等价a = a*3，返回30
+        
+        // 嵌套赋值表达式：右侧赋值表达式结果作为左侧赋值操作数
+        int c, d;
+        c = d = 8; // 先执行d=8（返回8），再执行c=8
+        System.out.println("c=" + c + "，d=" + d); // c=8，d=8
+    }
+}</code></pre>
+        <h4>关键注意事项</h4>
+        <ul>
+            <li>左侧必须是「可修改变量」（不能是常量、表达式，如10=5、a+b=8均报错）。</li>
+            <li>复合赋值表达式（+=、-=等）会自动执行强制类型转换，避免类型不兼容报错（如byte b=3; b+=2等价b=(byte)(b+2)）。</li>
+            <li>赋值表达式返回值可直接使用（如System.out.println(a=10)会打印10），但日常优先单独赋值（可读性更强）。</li>
+        </ul>
+
+        <h3>3. 比较表达式（条件判断基础）</h3>
+        <p>由比较运算符（==、!=、>、<、>=、<=）组成，操作数为数值型或可比较类型，<strong>返回值固定为布尔值（true/false）</strong>，核心用于条件判断（if、循环等）。</p>
+        <h4>核心语法与示例</h4>
+        <pre><code class="language-java">public class CompareExpression {
+    public static void main(String[] args) {
+        int score = 88, passScore = 60;
+        double height1 = 1.75, height2 = 1.80;
+        String name1 = "Java", name2 = "java";
+        
+        // 数值比较表达式
+        boolean isPass = score >= passScore;    // 返回true
+        boolean isTaller = height1 > height2;   // 返回false
+        boolean isEqual = score == 100;         // 返回false
+        
+        // 注意：浮点型不可直接用==比较（精度误差）
+        double num1 = 0.1 + 0.2;
+        double num2 = 0.3;
+        boolean floatEqual = Math.abs(num1 - num2) < 1e-6; // 正确比较方式，返回true
+        
+        // 字符串比较：==比较地址，推荐用equals方法（后续详解）
+        boolean strEqual = name1.equals(name2); // 返回false
+        
+        System.out.println("是否及格：" + isPass);
+        System.out.println("浮点型是否相等：" + floatEqual);
+    }
+}</code></pre>
+        <h4>关键注意事项</h4>
+        <ul>
+            <li>浮点型变量因精度误差，不可直接用==判断相等，需通过「差值绝对值小于极小值」判断（如1e-6）。</li>
+            <li>字符串属于引用类型，==比较的是内存地址而非内容，判断内容相等需用String类的equals方法。</li>
+            <li>比较表达式结果仅为布尔值，不可直接赋值给非布尔型变量（如int res = 5>3报错）。</li>
+        </ul>
+
+        <h3>4. 逻辑表达式（布尔值运算核心）</h3>
+        <p>由逻辑运算符（&&、||、!）组成，操作数必须是布尔值（true/false）或返回布尔值的表达式，<strong>返回值固定为布尔值</strong>，核心用于组合多个条件判断。</p>
+        <h4>核心语法与示例</h4>
+        <pre><code class="language-java">public class LogicExpression {
+    public static void main(String[] args) {
+        int age = 20;
+        double score = 92;
+        
+        // 操作数为布尔值的逻辑表达式
+        boolean flag1 = true, flag2 = false;
+        boolean andRes = flag1 && flag2;  // 逻辑与，返回false
+        boolean orRes = flag1 || flag2;   // 逻辑或，返回true
+        boolean notRes = !flag1;          // 逻辑非，返回false
+        
+        // 操作数为比较表达式的逻辑表达式（嵌套用法）
+        boolean condition1 = age >= 18 && age <= 30; // 年龄18-30，返回true
+        boolean condition2 = score >= 90 || score < 60; // 满分或不及格，返回true
+        
+        // 短路特性：左侧结果确定时，右侧表达式不执行
+        int num = 5;
+        boolean shortCircuit = (age < 18) && (num++ > 0); // 左侧false，num仍为5
+        System.out.println("短路后num：" + num); // 输出5
+        System.out.println("组合条件结果：" + condition1); // 输出true
+    }
+}</code></pre>
+        <h4>关键注意事项</h4>
+        <ul>
+            <li>短路逻辑运算符（&&、||）效率更高：&&左侧为false时右侧不执行，||左侧为true时右侧不执行；非短路运算符（&、|）无论左侧结果，右侧必执行。</li>
+            <li>操作数必须是布尔值：不可用数值型操作数（如5&&3报错，需转为比较表达式5>0&&3>0）。</li>
+            <li>逻辑表达式可多层嵌套，复杂时建议加括号明确优先级（如(a>b) && (c<<d)）。</li>
+        </ul>
+
+        <h3>5. 三元表达式（简化条件赋值）</h3>
+        <p>Java唯一三目表达式，由「条件表达式 ? 表达式1 : 表达式2」组成，先判断条件表达式结果，<strong>返回表达式1或表达式2的值</strong>，核心用于简化简单的if-else赋值逻辑。</p>
+        <h4>核心语法与示例</h4>
+        <pre><code class="language-java">public class TernaryExpression {
+    public static void main(String[] args) {
+        int score = 78;
+        int a = 25, b = 36;
+        
+        // 基础用法：判断成绩是否及格，返回对应字符串
+        String passRes = score >= 60 ? "及格" : "不及格";
+        
+        // 数值类型用法：返回两个数中的最大值
+        int maxNum = a > b ? a : b;
+        
+        // 嵌套用法：简化多层条件（最多1层，避免可读性差）
+        String grade = score >= 90 ? "优秀" : (score >= 80 ? "良好" : "合格");
+        
+        System.out.println("成绩结果：" + passRes); // 及格
+        System.out.println("最大值：" + maxNum); // 36
+        System.out.println("成绩等级：" + grade); // 合格
+    }
+}</code></pre>
+        <h4>关键注意事项</h4>
+        <ul>
+            <li>表达式1和表达式2类型必须一致（或可自动转换）：如int和double兼容，String和int不兼容（报错）。</li>
+            <li>必须使用返回值：三元表达式有明确返回值，不可单独执行（如score>=60?"及格":"不及格"报错，需赋值或作为其他表达式操作数）。</li>
+            <li>避免过度嵌套：嵌套超过1层可读性急剧下降，复杂条件优先用if-else语句。</li>
+        </ul>
+
+        <h3>6. 方法调用表达式（函数返回值使用）</h3>
+        <p>调用有返回值的方法组成的表达式，<strong>返回值为方法执行后的结果</strong>，方法调用表达式可作为其他表达式的操作数，是代码复用与逻辑封装的常用形式。</p>
+        <h4>核心语法与示例</h4>
+        <pre><code class="language-java">public class MethodCallExpression {
+    // 自定义有返回值的方法：求两个数的和
+    public static int add(int x, int y) {
+        return x + y;
+    }
+    
+    // 自定义有返回值的方法：判断是否为偶数
+    public static boolean isEven(int num) {
+        return num % 2 == 0;
+    }
+    
+    public static void main(String[] args) {
+        // 直接使用方法调用表达式结果
+        int sum = add(10, 20); // add(10,20)是表达式，返回30
+        System.out.println("两数之和：" + sum);
+        
+        // 方法调用表达式作为其他表达式操作数
+        int mulSum = add(5, 8) * 2; // 先执行add返回13，再*2返回26
+        boolean evenRes = isEven(add(3, 5)); // 先add返回8，再判断返回true
+        
+        System.out.println("和的2倍：" + mulSum); // 26
+        System.out.println("是否为偶数：" + evenRes); // true
+    }
+}</code></pre>
+        <h4>关键注意事项</h4>
+        <ul>
+            <li>仅「有返回值的方法」可构成方法调用表达式：无返回值方法（void修饰）调用不属于表达式（如System.out.println()无返回值，不可赋值）。</li>
+            <li>方法参数需匹配：调用时传入的参数类型、数量需与方法定义一致（如add(10.5,20)报错，因方法参数为int）。</li>
+        </ul>
+
+        <h3>7. 位表达式（基础了解）</h3>
+        <p>由位运算符（&、|、^、<<、>>等）和整数型操作数组成，直接操作二进制位，返回整数类型结果，日常开发用得少，底层优化场景常用。</p>
+        <pre><code class="language-java">public class BitExpression {
+    public static void main(String[] args) {
+        int a = 6, b = 3; // 6=110，3=011
+        
+        int andBit = a & b;  // 按位与，返回010→2
+        int orBit = a | b;   // 按位或，返回111→7
+        int leftShift = a << 1; // 左移1位，返回1100→12
+        
+        System.out.println("按位与结果：" + andBit);
+        System.out.println("左移结果：" + leftShift);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>三、Java表达式核心规则（避坑关键）</h2>
+        <ul>
+            <li>类型兼容原则：表达式内所有操作数类型需与运算符匹配，结果类型需与接收变量类型兼容，否则编译报错或精度丢失（如int接收double结果需强制转换）。</li>
+            <li>优先级与结合性：多运算符混合时，按优先级执行（括号>单目>算术>比较>逻辑>三元>赋值），优先级不确定时直接加括号；同一优先级按结合性执行（多数从左到右，赋值、三元从右到左）。</li>
+            <li>无副作用优先：避免在表达式中使用有副作用的操作（如自增自减、修改全局变量），易导致逻辑混乱、结果不可控。</li>
+            <li>嵌套适度原则：表达式嵌套层数不超过3层，过度嵌套会降低代码可读性，复杂逻辑可拆分为多个变量存储中间结果。</li>
+        </ul>
+        <pre><code class="language-java">public class ExpressionRule {
+    public static void main(String[] args) {
+        int a = 4, b = 2, c = 3;
+        
+        // 1. 优先级：加括号明确执行顺序（推荐）
+        int res1 = a + b * c;    // 先*后+，返回10
+        int res2 = (a + b) * c;  // 先括号内，返回18
+        
+        // 2. 结合性：赋值表达式从右到左
+        int d, e;
+        d = e = a + b; // 先e=6，再d=6
+        
+        // 3. 拆分复杂表达式（可读性更强）
+        // 复杂嵌套：int complex = (a*2 + b) > (c+5) ? (a+b) : (b*c);
+        int temp1 = a*2 + b;
+        int temp2 = c + 5;
+        int temp3 = a + b;
+        int temp4 = b * c;
+        int complex = temp1 > temp2 ? temp3 : temp4; // 逻辑清晰，易调试
+        
+        System.out.println("res2：" + res2);
+        System.out.println("复杂表达式结果：" + complex);
+    }
+}</code></pre>
+    </section>
+
+    <section>
+        <h2>四、表达式使用最佳实践</h2>
+        <ul>
+            <li>可读性优先：表达式简洁明了，避免一行写多个复杂表达式，复杂逻辑拆分变量存储中间结果。</li>
+            <li>优先级用括号明确：无论运算符优先级高低，用括号标注执行顺序，减少理解成本（如(a>b) && (c<=d)）。</li>
+            <li>类型安全把控：混合类型表达式需手动确认类型转换，避免隐式转换导致精度丢失（如(double)a/b而非a/b）。</li>
+            <li>避免无效表达式：不写无意义的表达式（如a+5; 仅计算无使用，浪费性能），所有表达式结果需有实际用途。</li>
+            <li>自增自减单独使用：自增自减表达式优先单独一行执行，不嵌套在复杂表达式中（如a++; 而非b = a++ + 1）。</li>
+        </ul>
+    </section>
+
+    <script type="text/javascript" src="../../../highlight/highlight.min.js"></script>
+    <script type="text/javascript" src="../../../js/article-common.js"></script>
+    <script type="text/javascript">hljs.highlightAll();</script>
+    <script>
+        addCopy('pre', 20, 20)            
+    </script>
+</body>
+</html>
